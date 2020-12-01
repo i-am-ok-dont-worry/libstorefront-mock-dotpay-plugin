@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/mateuspytel/libstorefront-plugin-template.git"
+    "url": "git+ssh://git@gitlab.com:mateuspytel/libstorefront-dotpay-plugin.git"
   },
   "keywords": [
     "LSF",
@@ -33,10 +33,6 @@
     "typescript": "^4.1.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com:mateuspytel/libstorefront-dotpay-plugin.git"
   },
   "publishConfig": {
     "@grupakmk:registry": "https://gitlab.com/api/v4/projects/22810671/packages/npm/"

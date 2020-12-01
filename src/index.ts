@@ -1,4 +1,4 @@
-import {createLibstorefrontModule, LibStorefront} from '@grupakmk/libstorefront';
+import {createLibstorefrontModule, HookType, LibStorefront} from '@grupakmk/libstorefront';
 import { LibstorefrontPlugin } from '@grupakmk/libstorefront/dist/config/types/libstorefront-plugin';
 import { DotpayDao } from './dao';
 import { DotpayService } from './service';
@@ -11,6 +11,7 @@ import { DotpayDefaultState } from './store/dotpay.default';
 export default ((libstorefront: LibStorefront) => {
     libstorefront.getIOCContainer().bind(DotpayDao).to(DotpayDao);
     libstorefront.getIOCContainer().bind(DotpayService).to(DotpayService);
-    debugger;
-    libstorefront.registerModule(createLibstorefrontModule('dotpay', dotpayReducer, DotpayDefaultState));
+    libstorefront.listenTo(HookType.AfterCoreModulesRegistered, (lsf: LibStorefront) => {
+        lsf.registerModule(createLibstorefrontModule('dotpay', dotpayReducer, DotpayDefaultState));
+    });
 }) as LibstorefrontPlugin;
