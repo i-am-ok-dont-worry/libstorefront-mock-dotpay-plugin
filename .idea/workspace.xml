@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="54708263-0784-4ba3-92e4-da70a39f759a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dao/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +60,7 @@
       <option name="presentableId" value="Default" />
       <updated>1606729476682</updated>
       <workItem from="1606729479049" duration="3859000" />
-      <workItem from="1606817614176" duration="8889000" />
+      <workItem from="1606817614176" duration="10872000" />
     </task>
     <servers />
   </component>
@@ -80,6 +79,9 @@
         <option value="$PROJECT_DIR$/tests/mock-localstorage.d.ts" />
         <option value="$PROJECT_DIR$/test.d.ts" />
         <option value="$PROJECT_DIR$/index.d.ts" />
+        <option value="$PROJECT_DIR$/../../storefront/node_modules/@grupakmk/libstorefront-dotpay-plugin/tests/test.d.ts" />
+        <option value="$PROJECT_DIR$/../../storefront/node_modules/@grupakmk/libstorefront-dotpay-plugin/tests/mock-localstorage.d.ts" />
+        <option value="$PROJECT_DIR$/../../storefront/node_modules/@grupakmk/libstorefront-dotpay-plugin/test.d.ts" />
       </list>
     </option>
   </component>

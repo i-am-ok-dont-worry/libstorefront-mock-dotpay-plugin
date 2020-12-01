@@ -9,9 +9,9 @@ import { DotpayDefaultState } from './store/dotpay.default';
  * Libstorefront plugin template
  */
 export default ((libstorefront: LibStorefront) => {
-    libstorefront.getIOCContainer().bind(DotpayDao).to(DotpayDao);
-    libstorefront.getIOCContainer().bind(DotpayService).to(DotpayService);
     libstorefront.listenTo(HookType.AfterCoreModulesRegistered, (lsf: LibStorefront) => {
+        lsf.getIOCContainer().bind(DotpayDao).to(DotpayDao);
+        lsf.getIOCContainer().bind(DotpayService).to(DotpayService);
         lsf.registerModule(createLibstorefrontModule('dotpay', dotpayReducer, DotpayDefaultState));
     });
 }) as LibstorefrontPlugin;

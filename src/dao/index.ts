@@ -5,7 +5,7 @@ import { Task, TaskQueue, URLTransform } from '@grupakmk/libstorefront';
 export class DotpayDao {
     public getDotpayForm (orderId: number): Promise<Task> {
         return this.taskQueue.execute({
-            url: URLTransform.processLocalizedURLAddress('/vendor/dotpay/form/' + orderId),
+            url: URLTransform.getAbsoluteApiUrl('/api/vendor/dotpay/form/' + orderId),
             payload: {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
@@ -17,7 +17,7 @@ export class DotpayDao {
 
     public getDotpayPaymentStatus (orderId: number): Promise<Task> {
         return this.taskQueue.execute({
-            url: URLTransform.processLocalizedURLAddress('/vendor/dotpay/status/' + orderId),
+            url: URLTransform.getAbsoluteApiUrl('/api/vendor/dotpay/status/' + orderId),
             payload: {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
