@@ -2,7 +2,8 @@
   "name": "libstorefront-plugin-template",
   "version": "1.0.0",
   "description": "Plugin template for Libstorefront",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "test": "jest --config jest.config.js --runInBand"
@@ -32,5 +33,12 @@
     "typescript": "^4.1.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com:mateuspytel/libstorefront-dotpay-plugin.git"
+  },
+  "publishConfig": {
+    "@grupakmk:registry": "https://gitlab.com/api/v4/projects/22810671/packages/npm/"
   }
 }

@@ -1,0 +1,11 @@
+index.ts
+jest.config.js
+test.ts
+tsconfig.json
+webpack.config.js
+yarn.lock
+node_modules/
+build/
+docs/
+tests/
+src/

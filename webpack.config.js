@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: path.resolve(__dirname, 'src', 'index.ts'),
+    entry: path.resolve(__dirname, 'index.ts'),
     mode: process.env.NODE_ENV !== 'production' ? 'development' : 'production',
     module: {
         rules: [
