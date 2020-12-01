@@ -1,4 +1,5 @@
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: path.resolve(__dirname, 'index.ts'),
@@ -9,14 +10,15 @@ module.exports = {
                 test: /\.ts?$/,
                 use: 'ts-loader',
                 exclude: [/node_modules/, /dist/, /tests/],
+            },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader'
             }
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
-        alias: {
-            'config': path.resolve(__dirname, 'config')
-        }
+        extensions: ['.tsx', '.ts', '.js']
     },
     output: {
         filename: 'index.js',
@@ -28,6 +30,7 @@ module.exports = {
     },
     devtool: 'source-map',
     optimization: {
-        minimize: true
-    }
+        minimize: false
+    },
+    externals: [nodeExternals()]
 };

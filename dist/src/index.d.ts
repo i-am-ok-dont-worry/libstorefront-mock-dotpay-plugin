@@ -1,6 +1,5 @@
-import { LibstorefrontPlugin } from '@grupakmk/libstorefront/dist/config/types/libstorefront-plugin';
-declare const _default: LibstorefrontPlugin;
+import { LibStorefront } from '@grupakmk/libstorefront';
 /**
  * Libstorefront plugin template
  */
-export default _default;
+export declare const DotpayPaymentPlugin: (libstorefront: LibStorefront) => void;

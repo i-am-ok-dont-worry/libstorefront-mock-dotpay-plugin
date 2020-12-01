@@ -5,6 +5,8 @@ import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront'
 @injectable()
 export class DotpayService {
 
+    @inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>;
+
     /**
      * Returns dotpay form that should be injected as HTML form
      * into a checkout payment pending page
@@ -23,5 +25,4 @@ export class DotpayService {
     public getDotpayPaymentStatus (orderId: number): Promise<any> {
         return this.store.dispatch(DotpayThunks.getDotpayStatus(orderId));
     }
-    public constructor(@inject(AbstractStore) public store: AbstractStore<LibstorefrontInnerState>) {}
 }

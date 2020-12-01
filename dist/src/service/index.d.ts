@@ -1,6 +1,5 @@
-import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront';
 export declare class DotpayService {
-    store: AbstractStore<LibstorefrontInnerState>;
+    private store;
     /**
      * Returns dotpay form that should be injected as HTML form
      * into a checkout payment pending page
@@ -14,5 +13,4 @@ export declare class DotpayService {
      * @returns {Promise<any>} Payment status
      */
     getDotpayPaymentStatus(orderId: number): Promise<any>;
-    constructor(store: AbstractStore<LibstorefrontInnerState>);
 }
