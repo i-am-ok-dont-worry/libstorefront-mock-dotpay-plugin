@@ -255,6 +255,7 @@ var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupa
 var DotpayService = /** @class */ (function () {
     function DotpayService(store) {
         this.store = store;
+        console.warn('Constructor!');
         store.dispatch(dotpay_thunks_1.DotpayThunks.loadLastDotpayTransaction());
     }
     /**
