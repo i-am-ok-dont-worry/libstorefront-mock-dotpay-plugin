@@ -7,7 +7,15 @@ export namespace DotpayThunks {
     export const getDotpayForm = (orderId: number) => async (dispatch, getState) => {
         try {
             const response = await IOCContainer.get(DotpayDao).getDotpayForm(orderId);
-            dispatch(DotpayActions.setDotpayForm(response.result));
+            let form;
+            if (response.result instanceof Array) {
+                const [data] = response.result;
+                if (data && data.hasOwnProperty('url')) { form = data; }
+            } else {
+                if (response.result && response.result.hasOwnProperty('url')) { form = response.result; }
+            }
+
+            dispatch(DotpayActions.setDotpayForm(form));
             return response;
         } catch (e) {
             return null;

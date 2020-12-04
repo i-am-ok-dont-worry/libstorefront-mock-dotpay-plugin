@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { DotpayThunks } from '../store/dotpay.thunks';
 import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront';
+import { DotpayResponse } from '../types';
 
 @injectable()
 export class DotpayService {
@@ -13,7 +14,7 @@ export class DotpayService {
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
      */
-    public getDotpayPaymentForm (orderId: number): Promise<any> {
+    public getDotpayPaymentForm (orderId: number): Promise<DotpayResponse> {
         return this.store.dispatch(DotpayThunks.getDotpayForm(orderId));
     }
 
