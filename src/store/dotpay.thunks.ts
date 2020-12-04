@@ -31,7 +31,8 @@ export namespace DotpayThunks {
     export const getDotpayStatus = (orderId: string) => async (dispatch, getState) => {
         try {
             const response = await IOCContainer.get(DotpayDao).getDotpayPaymentStatus(orderId);
-            dispatch(DotpayActions.setDotpayStatus(response.result));
+            await dispatch(DotpayActions.setDotpayStatus(response.result));
+            return response;
         } catch (e) {
             return null;
         }
