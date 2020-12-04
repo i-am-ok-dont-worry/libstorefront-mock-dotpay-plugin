@@ -178,11 +178,9 @@ exports.MockDotpayService = void 0;
 var inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 var dotpay_thunks_1 = __webpack_require__(/*! ../store/dotpay.thunks */ "./src/store/dotpay.thunks.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
-var types_1 = __webpack_require__(/*! ../types */ "./src/types/index.ts");
 var MockDotpayService = /** @class */ (function () {
     function MockDotpayService(store) {
         this.store = store;
-        this.failStatus = types_1.DotpayStatus.SUCCESS;
     }
     /**
      * Returns dotpay form that should be POST send
@@ -214,7 +212,7 @@ var MockDotpayService = /** @class */ (function () {
     MockDotpayService.prototype.setConfig = function (_a) {
         var shouldFail = _a.shouldFail, failStatus = _a.failStatus;
         this.shouldFail = shouldFail;
-        this.failStatus = failStatus || types_1.DotpayStatus.SUCCESS;
+        this.failStatus = failStatus;
     };
     MockDotpayService = __decorate([
         inversify_1.injectable(),

@@ -1,13 +1,13 @@
-import {inject, injectable} from 'inversify';
-import {MockDotpayThunks} from '../store/dotpay.thunks';
-import {AbstractStore, LibstorefrontInnerState, Task} from '@grupakmk/libstorefront';
-import {DotpayResponse, DotpayStatus} from '../types';
+import { inject, injectable } from 'inversify';
+import { MockDotpayThunks } from '../store/dotpay.thunks';
+import { AbstractStore, LibstorefrontInnerState, Task } from '@grupakmk/libstorefront';
+import { DotpayResponse, DotpayStatus } from '../types';
 
 @injectable()
 export class MockDotpayService {
 
     private shouldFail: boolean;
-    private failStatus: DotpayStatus = DotpayStatus.SUCCESS;
+    private failStatus: DotpayStatus;
 
     /**
      * Returns dotpay form that should be POST send
@@ -42,7 +42,7 @@ export class MockDotpayService {
 
     public setConfig({ shouldFail, failStatus }) {
         this.shouldFail = shouldFail;
-        this.failStatus = failStatus || DotpayStatus.SUCCESS;
+        this.failStatus = failStatus;
     }
 
     public constructor(@inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>) {}
