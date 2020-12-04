@@ -2,7 +2,7 @@ import { DotpayDao } from '../dao';
 import { DotpayActions } from './dotpay.actions';
 import { AbstractStore, IOCContainer, LibstorefrontInnerState } from "@grupakmk/libstorefront";
 import { StorageManager, StorageCollection } from '@grupakmk/libstorefront';
-import { DotpayResponse } from "../types";
+import {DotpayResponse, DotpayStatus} from "../types";
 import { DotpayModuleState } from "./dotpay.default";
 
 export namespace DotpayThunks {
@@ -30,11 +30,9 @@ export namespace DotpayThunks {
     // @ts-ignore
     export const getDotpayStatus = (orderId: string) => async (dispatch, getState) => {
         try {
-            console.warn('Fetching status');
             const response = await IOCContainer.get(DotpayDao).getDotpayPaymentStatus(orderId);
-            console.warn('Response: ', response);
             await dispatch(DotpayActions.setDotpayStatus(response.result));
-            return response;
+            return response.result as DotpayStatus;
         } catch (e) {
             console.warn('Error while fetching status: ', e);
             return null;
@@ -46,7 +44,7 @@ export namespace DotpayThunks {
         const trackStatus = (orderNumber) => {
             const interval = setInterval(async () => {
                 const status = await dispatch(getDotpayStatus(orderNumber));
-                if (status) { clearInterval(interval); }
+                if (status === DotpayStatus.SUCCESS) { clearInterval(interval); }
             }, 5000);
         };
 
