@@ -1,4 +1,4 @@
-import { DotpayForm } from '../types';
+import { DotpayForm, DotpayStatus } from '../types';
 export declare namespace DotpayActions {
     const SN_DOTPAY = "dotpay";
     const SET_DOTPAY_FORM: string;
@@ -12,8 +12,8 @@ export declare namespace DotpayActions {
         payload: string;
     };
     const SET_DOTPAY_STATUS: string;
-    const setDotpayStatus: (status: any) => {
+    const setDotpayStatus: (status: DotpayStatus) => {
         type: string;
-        payload: any;
+        payload: DotpayStatus;
     };
 }

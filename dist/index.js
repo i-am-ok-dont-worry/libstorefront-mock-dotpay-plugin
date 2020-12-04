@@ -106,13 +106,15 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DotpayDao = exports.DotpayService = exports.DotpayPaymentPlugin = void 0;
+exports.DotpayStatus = exports.DotpayDao = exports.DotpayService = exports.DotpayPaymentPlugin = void 0;
 var index_1 = __webpack_require__(/*! ./src/index */ "./src/index.ts");
 Object.defineProperty(exports, "DotpayPaymentPlugin", { enumerable: true, get: function () { return index_1.DotpayPaymentPlugin; } });
 var index_2 = __webpack_require__(/*! ./src/service/index */ "./src/service/index.ts");
 Object.defineProperty(exports, "DotpayService", { enumerable: true, get: function () { return index_2.DotpayService; } });
 var index_3 = __webpack_require__(/*! ./src/dao/index */ "./src/dao/index.ts");
 Object.defineProperty(exports, "DotpayDao", { enumerable: true, get: function () { return index_3.DotpayDao; } });
+var index_4 = __webpack_require__(/*! ./src/types/index */ "./src/types/index.ts");
+Object.defineProperty(exports, "DotpayStatus", { enumerable: true, get: function () { return index_4.DotpayStatus; } });
 
 
 /***/ }),
@@ -333,10 +335,11 @@ var DotpayActions;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DotpayDefaultState = void 0;
+var types_1 = __webpack_require__(/*! ../types */ "./src/types/index.ts");
 exports.DotpayDefaultState = {
     form: null,
     url: null,
-    status: null
+    status: types_1.DotpayStatus.NOT_EXISTS
 };
 
 
@@ -437,6 +440,7 @@ var dao_1 = __webpack_require__(/*! ../dao */ "./src/dao/index.ts");
 var dotpay_actions_1 = __webpack_require__(/*! ./dotpay.actions */ "./src/store/dotpay.actions.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
 var libstorefront_2 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
+var types_1 = __webpack_require__(/*! ../types */ "./src/types/index.ts");
 var DotpayThunks;
 (function (DotpayThunks) {
     var _this = this;
@@ -480,15 +484,13 @@ var DotpayThunks;
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    console.warn('Fetching status');
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayPaymentStatus(orderId)];
                 case 1:
                     response = _a.sent();
-                    console.warn('Response: ', response);
                     return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(response.result))];
                 case 2:
                     _a.sent();
-                    return [2 /*return*/, response];
+                    return [2 /*return*/, response.result];
                 case 3:
                     e_2 = _a.sent();
                     console.warn('Error while fetching status: ', e_2);
@@ -512,7 +514,7 @@ var DotpayThunks;
                                     case 0: return [4 /*yield*/, dispatch(DotpayThunks.getDotpayStatus(orderNumber))];
                                     case 1:
                                         status = _a.sent();
-                                        if (status) {
+                                        if (status === types_1.DotpayStatus.SUCCESS) {
                                             clearInterval(interval);
                                         }
                                         return [2 /*return*/];
@@ -539,6 +541,30 @@ var DotpayThunks;
         });
     }); }; };
 })(DotpayThunks = exports.DotpayThunks || (exports.DotpayThunks = {}));
+
+
+/***/ }),
+
+/***/ "./src/types/index.ts":
+/*!****************************!*\
+  !*** ./src/types/index.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DotpayStatus = void 0;
+var DotpayStatus;
+(function (DotpayStatus) {
+    DotpayStatus[DotpayStatus["NOT_EXISTS"] = 1] = "NOT_EXISTS";
+    DotpayStatus[DotpayStatus["ERROR"] = 0] = "ERROR";
+    DotpayStatus[DotpayStatus["PENDING"] = 1] = "PENDING";
+    DotpayStatus[DotpayStatus["SUCCESS"] = 2] = "SUCCESS";
+    DotpayStatus[DotpayStatus["TOO_MANY"] = 3] = "TOO_MANY";
+    DotpayStatus[DotpayStatus["OTHER_STATUS"] = 4] = "OTHER_STATUS"; // Status different than ERROR or PENDING
+})(DotpayStatus = exports.DotpayStatus || (exports.DotpayStatus = {}));
 
 
 /***/ }),

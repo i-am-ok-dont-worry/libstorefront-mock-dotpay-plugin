@@ -29,3 +29,11 @@ export interface DotpayResponse {
     url: string;
     data: DotpayForm;
 }
+export declare enum DotpayStatus {
+    NOT_EXISTS = 1,
+    ERROR = 0,
+    PENDING = 1,
+    SUCCESS = 2,
+    TOO_MANY = 3,
+    OTHER_STATUS = 4
+}
