@@ -480,15 +480,18 @@ var DotpayThunks;
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
+                    console.warn('Fetching status');
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayPaymentStatus(orderId)];
                 case 1:
                     response = _a.sent();
+                    console.warn('Response: ', response);
                     return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(response.result))];
                 case 2:
                     _a.sent();
                     return [2 /*return*/, response];
                 case 3:
                     e_2 = _a.sent();
+                    console.warn('Error while fetching status: ', e_2);
                     return [2 /*return*/, null];
                 case 4: return [2 /*return*/];
             }

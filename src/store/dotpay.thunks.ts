@@ -30,10 +30,13 @@ export namespace DotpayThunks {
     // @ts-ignore
     export const getDotpayStatus = (orderId: string) => async (dispatch, getState) => {
         try {
+            console.warn('Fetching status');
             const response = await IOCContainer.get(DotpayDao).getDotpayPaymentStatus(orderId);
+            console.warn('Response: ', response);
             await dispatch(DotpayActions.setDotpayStatus(response.result));
             return response;
         } catch (e) {
+            console.warn('Error while fetching status: ', e);
             return null;
         }
     }
