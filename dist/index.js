@@ -479,16 +479,18 @@ var DotpayThunks;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 3, , 4]);
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayPaymentStatus(orderId)];
                 case 1:
                     response = _a.sent();
-                    dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(response.result));
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(response.result))];
                 case 2:
+                    _a.sent();
+                    return [2 /*return*/, response];
+                case 3:
                     e_2 = _a.sent();
                     return [2 /*return*/, null];
-                case 3: return [2 /*return*/];
+                case 4: return [2 /*return*/];
             }
         });
     }); }; };
