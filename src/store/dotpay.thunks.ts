@@ -52,7 +52,7 @@ export namespace DotpayThunks {
                 if (status) { clearInterval(interval); }
             }, 5000);
         } catch (e) {
-
+            console.warn('Sending dotpay error: ', e);
         }
     }
 }

@@ -527,6 +527,7 @@ var DotpayThunks;
                     return [3 /*break*/, 3];
                 case 2:
                     e_3 = _a.sent();
+                    console.warn('Sending dotpay error: ', e_3);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
