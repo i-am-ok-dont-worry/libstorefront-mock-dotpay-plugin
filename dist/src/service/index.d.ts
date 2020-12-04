@@ -2,6 +2,8 @@ import { AbstractStore, LibstorefrontInnerState, Task } from '@grupakmk/libstore
 import { DotpayResponse, DotpayStatus } from '../types';
 export declare class MockDotpayService {
     private store;
+    private shouldFail;
+    private failStatus;
     /**
      * Returns dotpay form that should be POST send
      * as application/x-www-form-urlencoded form
@@ -15,11 +17,15 @@ export declare class MockDotpayService {
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    getDotpayPaymentStatus(shouldFail?: boolean, failStatus?: DotpayStatus): Promise<DotpayStatus>;
+    getDotpayPaymentStatus(): Promise<DotpayStatus>;
     /**
      * Sends parsed dotpay form
      */
-    sendDotpayForm(shouldFail?: boolean, failStatus?: DotpayStatus): Promise<Task>;
+    sendDotpayForm(): Promise<Task>;
     loadLastTransactionFromCache(): void;
+    setConfig({ shouldFail, failStatus }: {
+        shouldFail: any;
+        failStatus: any;
+    }): void;
     constructor(store: AbstractStore<LibstorefrontInnerState>);
 }

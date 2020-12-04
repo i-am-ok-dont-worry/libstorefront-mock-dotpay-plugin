@@ -6,6 +6,9 @@ import { DotpayResponse, DotpayStatus } from '../types';
 @injectable()
 export class MockDotpayService {
 
+    private shouldFail: boolean;
+    private failStatus: DotpayStatus;
+
     /**
      * Returns dotpay form that should be POST send
      * as application/x-www-form-urlencoded form
@@ -22,19 +25,24 @@ export class MockDotpayService {
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    public getDotpayPaymentStatus (shouldFail?: boolean, failStatus?: DotpayStatus): Promise<DotpayStatus> {
-        return this.store.dispatch(MockDotpayThunks.getDotpayStatus(shouldFail, failStatus));
+    public getDotpayPaymentStatus (): Promise<DotpayStatus> {
+        return this.store.dispatch(MockDotpayThunks.getDotpayStatus(this.shouldFail, this.failStatus));
     }
 
     /**
      * Sends parsed dotpay form
      */
-    public sendDotpayForm (shouldFail?: boolean, failStatus?: DotpayStatus): Promise<Task> {
-        return this.store.dispatch(MockDotpayThunks.sendDotpayForm(shouldFail, failStatus));
+    public sendDotpayForm (): Promise<Task> {
+        return this.store.dispatch(MockDotpayThunks.sendDotpayForm(this.shouldFail, this.failStatus));
     }
 
     public loadLastTransactionFromCache (): void {
         this.store.dispatch(MockDotpayThunks.loadLastDotpayTransaction());
+    }
+
+    public setConfig({ shouldFail, failStatus }) {
+        this.shouldFail = shouldFail;
+        this.failStatus = failStatus;
     }
 
     public constructor(@inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>) {}

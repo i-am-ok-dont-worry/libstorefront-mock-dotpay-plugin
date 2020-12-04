@@ -142,6 +142,7 @@ var MockDotpayPaymentPlugin = function (_a) {
         libstorefront.getIOCContainer().bind(service_1.MockDotpayService).to(service_1.MockDotpayService);
         libstorefront.listenTo(libstorefront_1.HookType.AfterCoreModulesRegistered, function (lsf) {
             lsf.registerModule(libstorefront_1.createLibstorefrontModule('mock_dotpay', dotpay_reducer_1.dotpayReducer, dotpay_default_1.DotpayDefaultState));
+            lsf.getIOCContainer().get(service_1.MockDotpayService).setConfig({ shouldFail: shouldFail, failStatus: failStatus });
         });
         libstorefront.listenTo(libstorefront_1.HookType.AfterInit, function () { return libstorefront.getIOCContainer().get(service_1.MockDotpayService).loadLastTransactionFromCache(); });
     };
@@ -196,17 +197,22 @@ var MockDotpayService = /** @class */ (function () {
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    MockDotpayService.prototype.getDotpayPaymentStatus = function (shouldFail, failStatus) {
-        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.getDotpayStatus(shouldFail, failStatus));
+    MockDotpayService.prototype.getDotpayPaymentStatus = function () {
+        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.getDotpayStatus(this.shouldFail, this.failStatus));
     };
     /**
      * Sends parsed dotpay form
      */
-    MockDotpayService.prototype.sendDotpayForm = function (shouldFail, failStatus) {
-        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.sendDotpayForm(shouldFail, failStatus));
+    MockDotpayService.prototype.sendDotpayForm = function () {
+        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.sendDotpayForm(this.shouldFail, this.failStatus));
     };
     MockDotpayService.prototype.loadLastTransactionFromCache = function () {
         this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.loadLastDotpayTransaction());
+    };
+    MockDotpayService.prototype.setConfig = function (_a) {
+        var shouldFail = _a.shouldFail, failStatus = _a.failStatus;
+        this.shouldFail = shouldFail;
+        this.failStatus = failStatus;
     };
     MockDotpayService = __decorate([
         inversify_1.injectable(),
