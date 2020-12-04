@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="54708263-0784-4ba3-92e4-da70a39f759a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dao/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/dotpay.thunks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/dotpay.thunks.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,7 +26,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -62,7 +59,8 @@
       <option name="presentableId" value="Default" />
       <updated>1606729476682</updated>
       <workItem from="1606729479049" duration="3859000" />
-      <workItem from="1606817614176" duration="35779000" />
+      <workItem from="1606817614176" duration="36620000" />
+      <workItem from="1607113887254" duration="110000" />
     </task>
     <servers />
   </component>
@@ -82,7 +80,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

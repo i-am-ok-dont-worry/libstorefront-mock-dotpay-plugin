@@ -18,9 +18,9 @@ export namespace DotpayThunks {
                 if (response.result && response.result.hasOwnProperty('url')) { dotpay = response.result; }
             }
 
-            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', dotpay);
-            dispatch(DotpayActions.setDotpayForm(dotpay.data));
-            dispatch(DotpayActions.setDotpayUrl(dotpay.url));
+            await dispatch(DotpayActions.setDotpayForm(dotpay.data));
+            await dispatch(DotpayActions.setDotpayUrl(dotpay.url));
+            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
             return dotpay;
         } catch (e) {
             return null;
@@ -45,6 +45,7 @@ export namespace DotpayThunks {
             const interval = setInterval(async () => {
                 const status = await dispatch(getDotpayStatus(orderNumber));
                 if (status === DotpayStatus.SUCCESS) { clearInterval(interval); }
+                StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
             }, 5000);
         };
 

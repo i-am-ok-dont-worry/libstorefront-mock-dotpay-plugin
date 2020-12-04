@@ -172,7 +172,6 @@ var DotpayDao = /** @class */ (function () {
         });
     };
     DotpayDao.prototype.sendDotpayInformationForm = function (sslUrl, form) {
-        console.warn('Sending dotpay form at: ', sslUrl, utils_1.buildDotpayPostBody(form));
         return this.taskQueue.execute({
             url: sslUrl,
             payload: {
@@ -254,7 +253,8 @@ var DotpayService = /** @class */ (function () {
     function DotpayService() {
     }
     /**
-     * Returns dotpay form that should be injected as HTML form
+     * Returns dotpay form that should be POST send
+     * as application/x-www-form-urlencoded form
      * into a checkout payment pending page
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
@@ -264,8 +264,8 @@ var DotpayService = /** @class */ (function () {
     };
     /**
      * Returns dotpay payment status for selected order
-     * @param {number }orderId
-     * @returns {Promise<any>} Payment status
+     * @param {string} orderId
+     * @returns {Promise<DotpayStatus>} Payment status
      */
     DotpayService.prototype.getDotpayPaymentStatus = function (orderId) {
         return this.store.dispatch(dotpay_thunks_1.DotpayThunks.getDotpayStatus(orderId));
@@ -450,7 +450,7 @@ var DotpayThunks;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 4, , 5]);
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayForm(orderId)];
                 case 1:
                     response = _a.sent();
@@ -466,14 +466,18 @@ var DotpayThunks;
                             dotpay = response.result;
                         }
                     }
-                    libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).setItem('LAST_DOTPAY_PAYMENT', dotpay);
-                    dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(dotpay.data));
-                    dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(dotpay.url));
-                    return [2 /*return*/, dotpay];
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(dotpay.data))];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(dotpay.url))];
+                case 3:
+                    _a.sent();
+                    libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
+                    return [2 /*return*/, dotpay];
+                case 4:
                     e_1 = _a.sent();
                     return [2 /*return*/, null];
-                case 3: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     }); }; };
@@ -517,6 +521,7 @@ var DotpayThunks;
                                         if (status === types_1.DotpayStatus.SUCCESS) {
                                             clearInterval(interval);
                                         }
+                                        libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
                                         return [2 /*return*/];
                                 }
                             });
