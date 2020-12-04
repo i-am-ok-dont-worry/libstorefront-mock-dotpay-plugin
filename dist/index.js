@@ -557,12 +557,14 @@ var DotpayThunks;
                     return [4 /*yield*/, libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).getItem('last_dotpay_payment')];
                 case 1:
                     lastDotpayPayment = _a.sent();
+                    console.warn('Loading dotpay from cache: ', lastDotpayPayment);
                     dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(lastDotpayPayment.url));
                     dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(lastDotpayPayment.form));
                     dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(lastDotpayPayment.status));
                     return [3 /*break*/, 3];
                 case 2:
                     e_4 = _a.sent();
+                    console.error('Failed loading from cache: ', e_4);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
