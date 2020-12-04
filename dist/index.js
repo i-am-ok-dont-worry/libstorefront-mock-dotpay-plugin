@@ -141,7 +141,7 @@ var MockDotpayPaymentPlugin = function (_a) {
     return function (libstorefront) {
         libstorefront.getIOCContainer().bind(service_1.MockDotpayService).to(service_1.MockDotpayService);
         libstorefront.listenTo(libstorefront_1.HookType.AfterCoreModulesRegistered, function (lsf) {
-            lsf.registerModule(libstorefront_1.createLibstorefrontModule('mock_dotpay', dotpay_reducer_1.dotpayReducer, dotpay_default_1.DotpayDefaultState));
+            lsf.registerModule(libstorefront_1.createLibstorefrontModule('dotpay', dotpay_reducer_1.dotpayReducer, dotpay_default_1.DotpayDefaultState));
             lsf.getIOCContainer().get(service_1.MockDotpayService).setConfig({ shouldFail: shouldFail, failStatus: failStatus });
         });
         libstorefront.listenTo(libstorefront_1.HookType.AfterInit, function () { return libstorefront.getIOCContainer().get(service_1.MockDotpayService).loadLastTransactionFromCache(); });
@@ -178,9 +178,11 @@ exports.MockDotpayService = void 0;
 var inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 var dotpay_thunks_1 = __webpack_require__(/*! ../store/dotpay.thunks */ "./src/store/dotpay.thunks.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
+var types_1 = __webpack_require__(/*! ../types */ "./src/types/index.ts");
 var MockDotpayService = /** @class */ (function () {
     function MockDotpayService(store) {
         this.store = store;
+        this.failStatus = types_1.DotpayStatus.SUCCESS;
     }
     /**
      * Returns dotpay form that should be POST send
@@ -212,7 +214,7 @@ var MockDotpayService = /** @class */ (function () {
     MockDotpayService.prototype.setConfig = function (_a) {
         var shouldFail = _a.shouldFail, failStatus = _a.failStatus;
         this.shouldFail = shouldFail;
-        this.failStatus = failStatus;
+        this.failStatus = failStatus || types_1.DotpayStatus.SUCCESS;
     };
     MockDotpayService = __decorate([
         inversify_1.injectable(),
@@ -427,7 +429,7 @@ var MockDotpayThunks;
                     return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(mockDotpayResponse.url))];
                 case 2:
                     _a.sent();
-                    libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
+                    libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
                     return [2 /*return*/, mockDotpayResponse];
                 case 3:
                     e_1 = _a.sent();
@@ -479,7 +481,7 @@ var MockDotpayThunks;
                                         if (status === types_1.DotpayStatus.SUCCESS) {
                                             clearInterval(interval);
                                         }
-                                        libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
+                                        libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
                                         return [2 /*return*/];
                                 }
                             });
@@ -488,7 +490,7 @@ var MockDotpayThunks;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().mock_dotpay;
+                    dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().dotpay;
                     return [4 /*yield*/, timeoutPromise(4000)];
                 case 2:
                     _a.sent();

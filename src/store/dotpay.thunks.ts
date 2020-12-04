@@ -49,7 +49,7 @@ export namespace MockDotpayThunks {
 
             await dispatch(DotpayActions.setDotpayForm(mockDotpayResponse.data));
             await dispatch(DotpayActions.setDotpayUrl(mockDotpayResponse.url));
-            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
+            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
             return mockDotpayResponse;
         } catch (e) {
             return null;
@@ -75,12 +75,12 @@ export namespace MockDotpayThunks {
             const interval = setInterval(async () => {
                 const status = await dispatch(getDotpayStatus(shouldFail, failStatus));
                 if (status === DotpayStatus.SUCCESS) { clearInterval(interval); }
-                StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
+                StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
             }, 5000);
         };
 
         try {
-            const dotpay = IOCContainer.get(AbstractStore).getState().mock_dotpay as DotpayModuleState;
+            const dotpay = IOCContainer.get(AbstractStore).getState().dotpay as DotpayModuleState;
             await timeoutPromise(4000);
             trackStatus();
         } catch (e) {

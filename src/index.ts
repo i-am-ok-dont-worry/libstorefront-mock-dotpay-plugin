@@ -10,7 +10,7 @@ import { DotpayStatus } from "./types";
 export const MockDotpayPaymentPlugin = ({ shouldFail = false, failStatus = DotpayStatus.SUCCESS }) => (libstorefront: LibStorefront) => {
     libstorefront.getIOCContainer().bind<MockDotpayService>(MockDotpayService).to(MockDotpayService);
     libstorefront.listenTo(HookType.AfterCoreModulesRegistered, (lsf: LibStorefront) => {
-        lsf.registerModule(createLibstorefrontModule('mock_dotpay', dotpayReducer, DotpayDefaultState));
+        lsf.registerModule(createLibstorefrontModule('dotpay', dotpayReducer, DotpayDefaultState));
         lsf.getIOCContainer().get(MockDotpayService).setConfig({ shouldFail, failStatus });
     });
     libstorefront.listenTo(HookType.AfterInit, () => libstorefront.getIOCContainer().get(MockDotpayService).loadLastTransactionFromCache());
