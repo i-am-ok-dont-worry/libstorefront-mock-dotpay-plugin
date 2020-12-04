@@ -1,7 +1,7 @@
 export interface DotpayForm {
     amount: number,
     api_version: string,
-    bylaw: 1,
+    bylaw: number,
     ch_lock: number,
     channel: string,
     chk: string,

@@ -1,7 +1,7 @@
 
 ![DotPay](https://www.cebule.pl/data/include/cms/CMS-DotPay/logo_dotpay.jpg)
-## LSF Dotpay plugin
-This plugin provides support for DotPay one click payments.
+## Mocked Dotpay plugin
+This plugin provides mocked support for DotPay one click payments.
 DotPay plugin appends new state branch to the LSF redux store:
 ```js
 {

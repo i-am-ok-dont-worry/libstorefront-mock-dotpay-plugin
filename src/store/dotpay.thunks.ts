@@ -1,61 +1,90 @@
-import { DotpayDao } from '../dao';
 import { DotpayActions } from './dotpay.actions';
-import { AbstractStore, IOCContainer, LibstorefrontInnerState } from '@grupakmk/libstorefront';
-import { StorageManager, StorageCollection } from '@grupakmk/libstorefront';
+import {
+    AbstractStore,
+    IOCContainer,
+    StorageCollection,
+    StorageManager
+} from '@grupakmk/libstorefront';
 import { DotpayResponse, DotpayStatus } from '../types';
 import { DotpayModuleState } from './dotpay.default';
 
-export namespace DotpayThunks {
+const timeoutPromise = (time = 2000) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
+export namespace MockDotpayThunks {
     // @ts-ignore
-    export const getDotpayForm = (orderId: string) => async (dispatch, getState) => {
+    export const getDotpayForm = () => async (dispatch, getState) => {
         try {
-            const response = await IOCContainer.get(DotpayDao).getDotpayForm(orderId);
-            let dotpay: DotpayResponse;
-            if (response.result instanceof Array) {
-                const [data] = response.result;
-                if (data && data.hasOwnProperty('url')) { dotpay = data; }
-            } else {
-                if (response.result && response.result.hasOwnProperty('url')) { dotpay = response.result; }
-            }
+            const mockData = {
+                amount: 424.25,
+                api_version: "dev",
+                bylaw: 1,
+                ch_lock: 0,
+                channel: null,
+                chk: "e84b61f89df0254fd55dbdfe4761fdf2e918cc37e684fa7af21d00cc2b913f6f",
+                city: "Twojego Starego",
+                control: 37,
+                country: "PL",
+                currency: "PLN",
+                customer: "eyJwYXllciI6eyJmaXJzdF9uYW1lIjoiTWF0ZXVzeiIsImxhc3RfbmFtZSI6IlBpZXRyb3dpYWsiLCJlbWFpbCI6ImplYmFjLXBpc0BncnVwYWttay5wbCIsInBob25lIjoiNTE1IDMzMyAxMzIxIn0sIm9yZGVyIjp7ImRlbGl2ZXJ5X2FkZHJlc3MiOnsiY2l0eSI6IlR3b2plZ28gU3RhcmVnbyIsInN0cmVldCI6IkxlY2hhIiwiYnVpbGRpbmdfbnVtYmVyIjoiS2FjennFhHNraWVnbyAzIiwicG9zdGNvZGUiOiIzMy0xMDAiLCJjb3VudHJ5IjoiUEwifX19",
+                description: "Nr zamówienia: 6000000038/37",
+                email: "jebac-pis@grupakmk.pl",
+                firstname: "Mateusz",
+                id: 768175,
+                ignore_last_payment_channel: 1,
+                lang: "pl",
+                lastname: "Pietrowiak",
+                personal_data: 1,
+                phone: "515 333 1321",
+                postcode: "33-100",
+                street: "Lecha",
+                street_n1: "Kaczyńskiego 3",
+                type: 0,
+                url: "https://ktm.staging.grupakmk.pl/checkout/dotpay/status",
+                urlc: "https://mage.ktm.staging.grupakmk.pl/dotpay/payment/confirm"
+            };
 
-            await dispatch(DotpayActions.setDotpayForm(dotpay.data));
-            await dispatch(DotpayActions.setDotpayUrl(dotpay.url));
-            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
-            return dotpay;
+            let mockDotpayResponse: DotpayResponse = {
+                data: mockData,
+                url: 'https://ssl.dotpay.pl/test_payment/'
+            };
+
+            await dispatch(DotpayActions.setDotpayForm(mockDotpayResponse.data));
+            await dispatch(DotpayActions.setDotpayUrl(mockDotpayResponse.url));
+            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
+            return mockDotpayResponse;
         } catch (e) {
             return null;
         }
     }
 
     // @ts-ignore
-    export const getDotpayStatus = (orderId: string) => async (dispatch, getState) => {
+    export const getDotpayStatus = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
+        const timeoutPromise = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
         try {
-            const response = await IOCContainer.get(DotpayDao).getDotpayPaymentStatus(orderId);
-            await dispatch(DotpayActions.setDotpayStatus(response.result));
-            return response.result as DotpayStatus;
+            const status = failStatus || DotpayStatus.SUCCESS;
+            await timeoutPromise();
+            await dispatch(DotpayActions.setDotpayStatus(status));
+            return status;
         } catch (e) {
             console.warn('Error while fetching status: ', e);
             return null;
         }
     };
 
-    export const sendDotpayForm = () => async (dispatch, getState) => {
-        const orderNumber = (IOCContainer.get(AbstractStore).getState() as LibstorefrontInnerState).order.last_order_confirmation.confirmation.orderNumber;
-        const trackStatus = (orderNumber) => {
+    export const sendDotpayForm = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
+        const trackStatus = () => {
             const interval = setInterval(async () => {
-                const status = await dispatch(getDotpayStatus(orderNumber));
+                const status = await dispatch(getDotpayStatus(shouldFail, failStatus));
                 if (status === DotpayStatus.SUCCESS) { clearInterval(interval); }
-                StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
+                StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
             }, 5000);
         };
 
         try {
-            const dotpay = IOCContainer.get(AbstractStore).getState().dotpay as DotpayModuleState;
-            const { form, url } = dotpay;
-            await IOCContainer.get(DotpayDao).sendDotpayInformationForm(url, form);
-            trackStatus(orderNumber);
+            const dotpay = IOCContainer.get(AbstractStore).getState().mock_dotpay as DotpayModuleState;
+            await timeoutPromise(4000);
+            trackStatus();
         } catch (e) {
-            trackStatus(orderNumber);
+            trackStatus();
         }
     };
 

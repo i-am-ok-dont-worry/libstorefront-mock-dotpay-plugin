@@ -106,91 +106,13 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DotpayStatus = exports.DotpayDao = exports.DotpayService = exports.DotpayPaymentPlugin = void 0;
+exports.DotpayStatus = exports.MockDotpayService = exports.MockDotpayPaymentPlugin = void 0;
 var index_1 = __webpack_require__(/*! ./src/index */ "./src/index.ts");
-Object.defineProperty(exports, "DotpayPaymentPlugin", { enumerable: true, get: function () { return index_1.DotpayPaymentPlugin; } });
+Object.defineProperty(exports, "MockDotpayPaymentPlugin", { enumerable: true, get: function () { return index_1.MockDotpayPaymentPlugin; } });
 var index_2 = __webpack_require__(/*! ./src/service/index */ "./src/service/index.ts");
-Object.defineProperty(exports, "DotpayService", { enumerable: true, get: function () { return index_2.DotpayService; } });
-var index_3 = __webpack_require__(/*! ./src/dao/index */ "./src/dao/index.ts");
-Object.defineProperty(exports, "DotpayDao", { enumerable: true, get: function () { return index_3.DotpayDao; } });
-var index_4 = __webpack_require__(/*! ./src/types/index */ "./src/types/index.ts");
-Object.defineProperty(exports, "DotpayStatus", { enumerable: true, get: function () { return index_4.DotpayStatus; } });
-
-
-/***/ }),
-
-/***/ "./src/dao/index.ts":
-/*!**************************!*\
-  !*** ./src/dao/index.ts ***!
-  \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DotpayDao = void 0;
-var inversify_1 = __webpack_require__(/*! inversify */ "inversify");
-var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
-var utils_1 = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
-var DotpayDao = /** @class */ (function () {
-    function DotpayDao(taskQueue) {
-        this.taskQueue = taskQueue;
-    }
-    DotpayDao.prototype.getDotpayForm = function (orderId) {
-        return this.taskQueue.execute({
-            url: libstorefront_1.URLTransform.getAbsoluteApiUrl('/api/vendor/dotpay/form/' + orderId),
-            payload: {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                mode: 'cors'
-            },
-            silent: true
-        });
-    };
-    DotpayDao.prototype.getDotpayPaymentStatus = function (orderId) {
-        return this.taskQueue.execute({
-            url: libstorefront_1.URLTransform.getAbsoluteApiUrl('/api/vendor/dotpay/status/' + orderId),
-            payload: {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                mode: 'cors'
-            },
-            silent: true
-        });
-    };
-    DotpayDao.prototype.sendDotpayInformationForm = function (sslUrl, form) {
-        return this.taskQueue.execute({
-            url: sslUrl,
-            payload: {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                mode: 'cors',
-                body: utils_1.buildDotpayPostBody(form)
-            },
-            silent: true
-        });
-    };
-    DotpayDao = __decorate([
-        inversify_1.injectable(),
-        __param(0, inversify_1.inject(libstorefront_1.TaskQueue)),
-        __metadata("design:paramtypes", [libstorefront_1.TaskQueue])
-    ], DotpayDao);
-    return DotpayDao;
-}());
-exports.DotpayDao = DotpayDao;
+Object.defineProperty(exports, "MockDotpayService", { enumerable: true, get: function () { return index_2.MockDotpayService; } });
+var index_3 = __webpack_require__(/*! ./src/types/index */ "./src/types/index.ts");
+Object.defineProperty(exports, "DotpayStatus", { enumerable: true, get: function () { return index_3.DotpayStatus; } });
 
 
 /***/ }),
@@ -205,24 +127,26 @@ exports.DotpayDao = DotpayDao;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DotpayPaymentPlugin = void 0;
+exports.MockDotpayPaymentPlugin = void 0;
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
 var service_1 = __webpack_require__(/*! ./service */ "./src/service/index.ts");
-var dao_1 = __webpack_require__(/*! ./dao */ "./src/dao/index.ts");
 var dotpay_reducer_1 = __webpack_require__(/*! ./store/dotpay.reducer */ "./src/store/dotpay.reducer.ts");
 var dotpay_default_1 = __webpack_require__(/*! ./store/dotpay.default */ "./src/store/dotpay.default.ts");
+var types_1 = __webpack_require__(/*! ./types */ "./src/types/index.ts");
 /**
  * Libstorefront plugin template
  */
-var DotpayPaymentPlugin = function (libstorefront) {
-    libstorefront.getIOCContainer().bind(service_1.DotpayService).to(service_1.DotpayService);
-    libstorefront.getIOCContainer().bind(dao_1.DotpayDao).to(dao_1.DotpayDao);
-    libstorefront.listenTo(libstorefront_1.HookType.AfterCoreModulesRegistered, function (lsf) {
-        lsf.registerModule(libstorefront_1.createLibstorefrontModule('dotpay', dotpay_reducer_1.dotpayReducer, dotpay_default_1.DotpayDefaultState));
-    });
-    libstorefront.listenTo(libstorefront_1.HookType.AfterInit, function () { return libstorefront.getIOCContainer().get(service_1.DotpayService).loadLastTransactionFromCache(); });
+var MockDotpayPaymentPlugin = function (_a) {
+    var _b = _a.shouldFail, shouldFail = _b === void 0 ? false : _b, _c = _a.failStatus, failStatus = _c === void 0 ? types_1.DotpayStatus.SUCCESS : _c;
+    return function (libstorefront) {
+        libstorefront.getIOCContainer().bind(service_1.MockDotpayService).to(service_1.MockDotpayService);
+        libstorefront.listenTo(libstorefront_1.HookType.AfterCoreModulesRegistered, function (lsf) {
+            lsf.registerModule(libstorefront_1.createLibstorefrontModule('mock_dotpay', dotpay_reducer_1.dotpayReducer, dotpay_default_1.DotpayDefaultState));
+        });
+        libstorefront.listenTo(libstorefront_1.HookType.AfterInit, function () { return libstorefront.getIOCContainer().get(service_1.MockDotpayService).loadLastTransactionFromCache(); });
+    };
 };
-exports.DotpayPaymentPlugin = DotpayPaymentPlugin;
+exports.MockDotpayPaymentPlugin = MockDotpayPaymentPlugin;
 
 
 /***/ }),
@@ -249,12 +173,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DotpayService = void 0;
+exports.MockDotpayService = void 0;
 var inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 var dotpay_thunks_1 = __webpack_require__(/*! ../store/dotpay.thunks */ "./src/store/dotpay.thunks.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
-var DotpayService = /** @class */ (function () {
-    function DotpayService(store) {
+var MockDotpayService = /** @class */ (function () {
+    function MockDotpayService(store) {
         this.store = store;
     }
     /**
@@ -264,34 +188,34 @@ var DotpayService = /** @class */ (function () {
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
      */
-    DotpayService.prototype.getDotpayPaymentForm = function (orderId) {
-        return this.store.dispatch(dotpay_thunks_1.DotpayThunks.getDotpayForm(orderId));
+    MockDotpayService.prototype.getDotpayPaymentForm = function () {
+        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.getDotpayForm());
     };
     /**
      * Returns dotpay payment status for selected order
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    DotpayService.prototype.getDotpayPaymentStatus = function (orderId) {
-        return this.store.dispatch(dotpay_thunks_1.DotpayThunks.getDotpayStatus(orderId));
+    MockDotpayService.prototype.getDotpayPaymentStatus = function (shouldFail, failStatus) {
+        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.getDotpayStatus(shouldFail, failStatus));
     };
     /**
      * Sends parsed dotpay form
      */
-    DotpayService.prototype.sendDotpayForm = function () {
-        return this.store.dispatch(dotpay_thunks_1.DotpayThunks.sendDotpayForm());
+    MockDotpayService.prototype.sendDotpayForm = function (shouldFail, failStatus) {
+        return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.sendDotpayForm(shouldFail, failStatus));
     };
-    DotpayService.prototype.loadLastTransactionFromCache = function () {
-        this.store.dispatch(dotpay_thunks_1.DotpayThunks.loadLastDotpayTransaction());
+    MockDotpayService.prototype.loadLastTransactionFromCache = function () {
+        this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.loadLastDotpayTransaction());
     };
-    DotpayService = __decorate([
+    MockDotpayService = __decorate([
         inversify_1.injectable(),
         __param(0, inversify_1.inject(libstorefront_1.AbstractStore)),
         __metadata("design:paramtypes", [libstorefront_1.AbstractStore])
-    ], DotpayService);
-    return DotpayService;
+    ], MockDotpayService);
+    return MockDotpayService;
 }());
-exports.DotpayService = DotpayService;
+exports.MockDotpayService = MockDotpayService;
 
 
 /***/ }),
@@ -441,93 +365,115 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DotpayThunks = void 0;
-var dao_1 = __webpack_require__(/*! ../dao */ "./src/dao/index.ts");
+exports.MockDotpayThunks = void 0;
 var dotpay_actions_1 = __webpack_require__(/*! ./dotpay.actions */ "./src/store/dotpay.actions.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
-var libstorefront_2 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
 var types_1 = __webpack_require__(/*! ../types */ "./src/types/index.ts");
-var DotpayThunks;
-(function (DotpayThunks) {
+var timeoutPromise = function (time) {
+    if (time === void 0) { time = 2000; }
+    return new Promise(function (resolve) { return setTimeout(function () { return resolve(); }, time); });
+};
+var MockDotpayThunks;
+(function (MockDotpayThunks) {
     var _this = this;
     // @ts-ignore
-    DotpayThunks.getDotpayForm = function (orderId) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var response, dotpay, data, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayForm(orderId)];
-                case 1:
-                    response = _a.sent();
-                    dotpay = void 0;
-                    if (response.result instanceof Array) {
-                        data = response.result[0];
-                        if (data && data.hasOwnProperty('url')) {
-                            dotpay = data;
-                        }
-                    }
-                    else {
-                        if (response.result && response.result.hasOwnProperty('url')) {
-                            dotpay = response.result;
-                        }
-                    }
-                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(dotpay.data))];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(dotpay.url))];
-                case 3:
-                    _a.sent();
-                    libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
-                    return [2 /*return*/, dotpay];
-                case 4:
-                    e_1 = _a.sent();
-                    return [2 /*return*/, null];
-                case 5: return [2 /*return*/];
-            }
-        });
-    }); }; };
-    // @ts-ignore
-    DotpayThunks.getDotpayStatus = function (orderId) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var response, e_2;
+    MockDotpayThunks.getDotpayForm = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+        var mockData, mockDotpayResponse, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayPaymentStatus(orderId)];
+                    mockData = {
+                        amount: 424.25,
+                        api_version: "dev",
+                        bylaw: 1,
+                        ch_lock: 0,
+                        channel: null,
+                        chk: "e84b61f89df0254fd55dbdfe4761fdf2e918cc37e684fa7af21d00cc2b913f6f",
+                        city: "Twojego Starego",
+                        control: 37,
+                        country: "PL",
+                        currency: "PLN",
+                        customer: "eyJwYXllciI6eyJmaXJzdF9uYW1lIjoiTWF0ZXVzeiIsImxhc3RfbmFtZSI6IlBpZXRyb3dpYWsiLCJlbWFpbCI6ImplYmFjLXBpc0BncnVwYWttay5wbCIsInBob25lIjoiNTE1IDMzMyAxMzIxIn0sIm9yZGVyIjp7ImRlbGl2ZXJ5X2FkZHJlc3MiOnsiY2l0eSI6IlR3b2plZ28gU3RhcmVnbyIsInN0cmVldCI6IkxlY2hhIiwiYnVpbGRpbmdfbnVtYmVyIjoiS2FjennFhHNraWVnbyAzIiwicG9zdGNvZGUiOiIzMy0xMDAiLCJjb3VudHJ5IjoiUEwifX19",
+                        description: "Nr zamówienia: 6000000038/37",
+                        email: "jebac-pis@grupakmk.pl",
+                        firstname: "Mateusz",
+                        id: 768175,
+                        ignore_last_payment_channel: 1,
+                        lang: "pl",
+                        lastname: "Pietrowiak",
+                        personal_data: 1,
+                        phone: "515 333 1321",
+                        postcode: "33-100",
+                        street: "Lecha",
+                        street_n1: "Kaczyńskiego 3",
+                        type: 0,
+                        url: "https://ktm.staging.grupakmk.pl/checkout/dotpay/status",
+                        urlc: "https://mage.ktm.staging.grupakmk.pl/dotpay/payment/confirm"
+                    };
+                    mockDotpayResponse = {
+                        data: mockData,
+                        url: 'https://ssl.dotpay.pl/test_payment/'
+                    };
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(mockDotpayResponse.data))];
                 case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(response.result))];
+                    _a.sent();
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(mockDotpayResponse.url))];
                 case 2:
                     _a.sent();
-                    return [2 /*return*/, response.result];
+                    libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
+                    return [2 /*return*/, mockDotpayResponse];
                 case 3:
-                    e_2 = _a.sent();
-                    console.warn('Error while fetching status: ', e_2);
+                    e_1 = _a.sent();
                     return [2 /*return*/, null];
                 case 4: return [2 /*return*/];
             }
         });
     }); }; };
-    DotpayThunks.sendDotpayForm = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var orderNumber, trackStatus, dotpay, form, url, e_3;
+    // @ts-ignore
+    MockDotpayThunks.getDotpayStatus = function (shouldFail, failStatus) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+        var timeoutPromise, status_1, e_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    timeoutPromise = function () { return new Promise(function (resolve) { return setTimeout(function () { return resolve(); }, 1000); }); };
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    status_1 = failStatus || types_1.DotpayStatus.SUCCESS;
+                    return [4 /*yield*/, timeoutPromise()];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(status_1))];
+                case 3:
+                    _a.sent();
+                    return [2 /*return*/, status_1];
+                case 4:
+                    e_2 = _a.sent();
+                    console.warn('Error while fetching status: ', e_2);
+                    return [2 /*return*/, null];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); }; };
+    MockDotpayThunks.sendDotpayForm = function (shouldFail, failStatus) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+        var trackStatus, dotpay, e_3;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    orderNumber = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().order.last_order_confirmation.confirmation.orderNumber;
-                    trackStatus = function (orderNumber) {
+                    trackStatus = function () {
                         var interval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
                             var status;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, dispatch(DotpayThunks.getDotpayStatus(orderNumber))];
+                                    case 0: return [4 /*yield*/, dispatch(MockDotpayThunks.getDotpayStatus(shouldFail, failStatus))];
                                     case 1:
                                         status = _a.sent();
                                         if (status === types_1.DotpayStatus.SUCCESS) {
                                             clearInterval(interval);
                                         }
-                                        libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
+                                        libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().mock_dotpay);
                                         return [2 /*return*/];
                                 }
                             });
@@ -536,28 +482,27 @@ var DotpayThunks;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().dotpay;
-                    form = dotpay.form, url = dotpay.url;
-                    return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).sendDotpayInformationForm(url, form)];
+                    dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().mock_dotpay;
+                    return [4 /*yield*/, timeoutPromise(4000)];
                 case 2:
                     _a.sent();
-                    trackStatus(orderNumber);
+                    trackStatus();
                     return [3 /*break*/, 4];
                 case 3:
                     e_3 = _a.sent();
-                    trackStatus(orderNumber);
+                    trackStatus();
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
         });
     }); }; };
-    DotpayThunks.loadLastDotpayTransaction = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+    MockDotpayThunks.loadLastDotpayTransaction = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
         var lastDotpayPayment, e_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).getItem('last_dotpay_payment')];
+                    return [4 /*yield*/, libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).getItem('last_dotpay_payment')];
                 case 1:
                     lastDotpayPayment = _a.sent();
                     if (!lastDotpayPayment) {
@@ -574,7 +519,7 @@ var DotpayThunks;
             }
         });
     }); }; };
-})(DotpayThunks = exports.DotpayThunks || (exports.DotpayThunks = {}));
+})(MockDotpayThunks = exports.MockDotpayThunks || (exports.MockDotpayThunks = {}));
 
 
 /***/ }),
@@ -603,29 +548,6 @@ var DotpayStatus;
 
 /***/ }),
 
-/***/ "./src/utils/index.ts":
-/*!****************************!*\
-  !*** ./src/utils/index.ts ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildDotpayPostBody = void 0;
-var qs = __webpack_require__(/*! querystring */ "querystring");
-var buildDotpayPostBody = function (formData) {
-    if (formData && Object.keys(formData).length > 0) {
-        return qs.stringify(formData);
-    }
-    return null;
-};
-exports.buildDotpayPostBody = buildDotpayPostBody;
-
-
-/***/ }),
-
 /***/ "@grupakmk/libstorefront":
 /*!******************************************!*\
   !*** external "@grupakmk/libstorefront" ***!
@@ -645,17 +567,6 @@ module.exports = require("@grupakmk/libstorefront");
 /***/ (function(module, exports) {
 
 module.exports = require("inversify");
-
-/***/ }),
-
-/***/ "querystring":
-/*!******************************!*\
-  !*** external "querystring" ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("querystring");
 
 /***/ })
 

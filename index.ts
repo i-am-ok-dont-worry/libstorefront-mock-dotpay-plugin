@@ -1,4 +1,3 @@
-export { DotpayPaymentPlugin } from './src/index';
-export { DotpayService } from './src/service/index';
-export { DotpayDao } from './src/dao/index';
+export { MockDotpayPaymentPlugin } from './src/index';
+export { MockDotpayService } from './src/service/index';
 export { DotpayResponse, DotpayForm, DotpayStatus } from './src/types/index';
