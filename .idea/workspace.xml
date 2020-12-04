@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="54708263-0784-4ba3-92e4-da70a39f759a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dao/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/dotpay.actions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/dotpay.actions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/dotpay.default.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/dotpay.default.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/dotpay.reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/dotpay.reducer.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/dotpay.thunks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/dotpay.thunks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +68,7 @@
       <option name="presentableId" value="Default" />
       <updated>1606729476682</updated>
       <workItem from="1606729479049" duration="3859000" />
-      <workItem from="1606817614176" duration="25513000" />
+      <workItem from="1606817614176" duration="28023000" />
     </task>
     <servers />
   </component>

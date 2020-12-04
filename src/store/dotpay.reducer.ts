@@ -11,6 +11,9 @@ export const dotpayReducer: Reducer<DotpayModuleState, AnyAction> = (state = Dot
         case DotpayActions.SET_DOTPAY_STATUS: {
             return { ...state, status: action.payload };
         }
+        case DotpayActions.SET_DOTPAY_URL: {
+            return { ...state, url: action.payload };
+        }
         default: return state || DotpayDefaultState;
     }
 };

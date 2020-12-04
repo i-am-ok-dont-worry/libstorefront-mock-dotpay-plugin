@@ -1,9 +1,13 @@
+import { DotpayForm } from "../types";
+
 export const DotpayDefaultState: DotpayModuleState = {
     form: null,
+    url: null,
     status: null
 }
 
 export interface DotpayModuleState {
-    form: string|null,
+    form: DotpayForm,
+    url: string,
     status: any
 }

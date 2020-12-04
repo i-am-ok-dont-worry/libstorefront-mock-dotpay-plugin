@@ -1,34 +1,54 @@
 import { DotpayDao } from '../dao';
 import { DotpayActions } from './dotpay.actions';
-import { IOCContainer } from "@grupakmk/libstorefront";
+import { AbstractStore, IOCContainer, LibstorefrontInnerState } from "@grupakmk/libstorefront";
+import { StorageManager, StorageCollection } from '@grupakmk/libstorefront';
+import { DotpayResponse } from "../types";
+import { DotpayModuleState } from "./dotpay.default";
 
 export namespace DotpayThunks {
     // @ts-ignore
-    export const getDotpayForm = (orderId: number) => async (dispatch, getState) => {
+    export const getDotpayForm = (orderId: string) => async (dispatch, getState) => {
         try {
             const response = await IOCContainer.get(DotpayDao).getDotpayForm(orderId);
-            let form;
+            let dotpay: DotpayResponse;
             if (response.result instanceof Array) {
                 const [data] = response.result;
-                if (data && data.hasOwnProperty('url')) { form = data; }
+                if (data && data.hasOwnProperty('url')) { dotpay = data; }
             } else {
-                if (response.result && response.result.hasOwnProperty('url')) { form = response.result; }
+                if (response.result && response.result.hasOwnProperty('url')) { dotpay = response.result; }
             }
 
-            dispatch(DotpayActions.setDotpayForm(form));
-            return response;
+            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('LAST_DOTPAY_PAYMENT', dotpay);
+            dispatch(DotpayActions.setDotpayForm(dotpay.data));
+            dispatch(DotpayActions.setDotpayUrl(dotpay.url));
+            return dotpay;
         } catch (e) {
             return null;
         }
     }
 
     // @ts-ignore
-    export const getDotpayStatus = (orderId: number) => async (dispatch, getState) => {
+    export const getDotpayStatus = (orderId: string) => async (dispatch, getState) => {
         try {
             const response = await IOCContainer.get(DotpayDao).getDotpayPaymentStatus(orderId);
             dispatch(DotpayActions.setDotpayStatus(response.result));
         } catch (e) {
             return null;
+        }
+    }
+
+    export const sendDotpayForm = () => async (dispatch, getState) => {
+        try {
+            const orderNumber = (IOCContainer.get(AbstractStore).getState() as LibstorefrontInnerState).order.last_order_confirmation.confirmation.orderNumber;
+            const dotpay = IOCContainer.get(AbstractStore).getState().dotpay as DotpayModuleState;
+            const { form, url } = dotpay;
+            const response = await IOCContainer.get(DotpayDao).sendDotpayInformationForm(url, form);
+            const interval = setInterval(async () => {
+                const status = await dispatch(getDotpayStatus(orderNumber));
+                if (status) { clearInterval(interval); }
+            }, 5000);
+        } catch (e) {
+
         }
     }
 }
