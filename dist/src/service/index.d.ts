@@ -1,4 +1,4 @@
-import { Task } from '@grupakmk/libstorefront';
+import { AbstractStore, LibstorefrontInnerState, Task } from '@grupakmk/libstorefront';
 import { DotpayResponse, DotpayStatus } from '../types';
 export declare class DotpayService {
     private store;
@@ -20,4 +20,5 @@ export declare class DotpayService {
      * Sends parsed dotpay form
      */
     sendDotpayForm(): Promise<Task>;
+    constructor(store: AbstractStore<LibstorefrontInnerState>);
 }

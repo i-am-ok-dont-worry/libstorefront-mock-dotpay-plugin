@@ -1,12 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { DotpayThunks } from '../store/dotpay.thunks';
 import { AbstractStore, LibstorefrontInnerState, Task } from '@grupakmk/libstorefront';
-import {DotpayResponse, DotpayStatus} from '../types';
+import { DotpayResponse, DotpayStatus } from '../types';
 
 @injectable()
 export class DotpayService {
-
-    @inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>;
 
     /**
      * Returns dotpay form that should be POST send
@@ -33,5 +31,9 @@ export class DotpayService {
      */
     public sendDotpayForm (): Promise<Task> {
         return this.store.dispatch(DotpayThunks.sendDotpayForm());
+    }
+
+    public constructor(@inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>) {
+        store.dispatch(DotpayThunks.loadLastDotpayTransaction());
     }
 }

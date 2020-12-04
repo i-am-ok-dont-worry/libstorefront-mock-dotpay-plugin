@@ -244,13 +244,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DotpayService = void 0;
 var inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 var dotpay_thunks_1 = __webpack_require__(/*! ../store/dotpay.thunks */ "./src/store/dotpay.thunks.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
 var DotpayService = /** @class */ (function () {
-    function DotpayService() {
+    function DotpayService(store) {
+        this.store = store;
+        store.dispatch(dotpay_thunks_1.DotpayThunks.loadLastDotpayTransaction());
     }
     /**
      * Returns dotpay form that should be POST send
@@ -276,12 +281,10 @@ var DotpayService = /** @class */ (function () {
     DotpayService.prototype.sendDotpayForm = function () {
         return this.store.dispatch(dotpay_thunks_1.DotpayThunks.sendDotpayForm());
     };
-    __decorate([
-        inversify_1.inject(libstorefront_1.AbstractStore),
-        __metadata("design:type", libstorefront_1.AbstractStore)
-    ], DotpayService.prototype, "store", void 0);
     DotpayService = __decorate([
-        inversify_1.injectable()
+        inversify_1.injectable(),
+        __param(0, inversify_1.inject(libstorefront_1.AbstractStore)),
+        __metadata("design:paramtypes", [libstorefront_1.AbstractStore])
     ], DotpayService);
     return DotpayService;
 }());
@@ -542,6 +545,26 @@ var DotpayThunks;
                     trackStatus(orderNumber);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
+            }
+        });
+    }); }; };
+    DotpayThunks.loadLastDotpayTransaction = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+        var lastDotpayPayment, e_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).getItem('last_dotpay_payment')];
+                case 1:
+                    lastDotpayPayment = _a.sent();
+                    dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(lastDotpayPayment.url));
+                    dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(lastDotpayPayment.form));
+                    dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(lastDotpayPayment.status));
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_4 = _a.sent();
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     }); }; };

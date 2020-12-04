@@ -1,9 +1,9 @@
 import { DotpayDao } from '../dao';
 import { DotpayActions } from './dotpay.actions';
-import { AbstractStore, IOCContainer, LibstorefrontInnerState } from "@grupakmk/libstorefront";
+import { AbstractStore, IOCContainer, LibstorefrontInnerState } from '@grupakmk/libstorefront';
 import { StorageManager, StorageCollection } from '@grupakmk/libstorefront';
-import {DotpayResponse, DotpayStatus} from "../types";
-import { DotpayModuleState } from "./dotpay.default";
+import { DotpayResponse, DotpayStatus } from '../types';
+import { DotpayModuleState } from './dotpay.default';
 
 export namespace DotpayThunks {
     // @ts-ignore
@@ -37,7 +37,7 @@ export namespace DotpayThunks {
             console.warn('Error while fetching status: ', e);
             return null;
         }
-    }
+    };
 
     export const sendDotpayForm = () => async (dispatch, getState) => {
         const orderNumber = (IOCContainer.get(AbstractStore).getState() as LibstorefrontInnerState).order.last_order_confirmation.confirmation.orderNumber;
@@ -57,5 +57,14 @@ export namespace DotpayThunks {
         } catch (e) {
             trackStatus(orderNumber);
         }
+    };
+
+    export const loadLastDotpayTransaction = () => async (dispatch, getState) => {
+        try {
+            const lastDotpayPayment: DotpayModuleState = await StorageManager.getInstance().get(StorageCollection.ORDERS).getItem('last_dotpay_payment');
+            dispatch(DotpayActions.setDotpayUrl(lastDotpayPayment.url));
+            dispatch(DotpayActions.setDotpayForm(lastDotpayPayment.form));
+            dispatch(DotpayActions.setDotpayStatus(lastDotpayPayment.status));
+        } catch (e) {}
     }
 }
