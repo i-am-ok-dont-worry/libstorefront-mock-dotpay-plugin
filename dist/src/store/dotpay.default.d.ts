@@ -1,5 +1,7 @@
+import { DotpayForm } from "../types";
 export declare const DotpayDefaultState: DotpayModuleState;
 export interface DotpayModuleState {
-    form: string | null;
+    form: DotpayForm;
+    url: string;
     status: any;
 }

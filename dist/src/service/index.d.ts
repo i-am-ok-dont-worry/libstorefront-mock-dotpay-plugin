@@ -1,3 +1,5 @@
+import { Task } from '@grupakmk/libstorefront';
+import { DotpayResponse } from '../types';
 export declare class DotpayService {
     private store;
     /**
@@ -6,11 +8,15 @@ export declare class DotpayService {
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
      */
-    getDotpayPaymentForm(orderId: number): Promise<any>;
+    getDotpayPaymentForm(orderId: string): Promise<DotpayResponse>;
     /**
      * Returns dotpay payment status for selected order
      * @param {number }orderId
      * @returns {Promise<any>} Payment status
      */
-    getDotpayPaymentStatus(orderId: number): Promise<any>;
+    getDotpayPaymentStatus(orderId: string): Promise<any>;
+    /**
+     * Sends parsed dotpay form
+     */
+    sendDotpayForm(): Promise<Task>;
 }

@@ -142,6 +142,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DotpayDao = void 0;
 var inversify_1 = __webpack_require__(/*! inversify */ "inversify");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
+var utils_1 = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
 var DotpayDao = /** @class */ (function () {
     function DotpayDao(taskQueue) {
         this.taskQueue = taskQueue;
@@ -164,6 +165,19 @@ var DotpayDao = /** @class */ (function () {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
                 mode: 'cors'
+            },
+            silent: true
+        });
+    };
+    DotpayDao.prototype.sendDotpayInformationForm = function (sslUrl, form) {
+        console.warn('Sending dotpay form at: ', sslUrl, utils_1.buildDotpayPostBody(form));
+        return this.taskQueue.execute({
+            url: sslUrl,
+            payload: {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                mode: 'cors',
+                body: utils_1.buildDotpayPostBody(form)
             },
             silent: true
         });
@@ -254,6 +268,12 @@ var DotpayService = /** @class */ (function () {
     DotpayService.prototype.getDotpayPaymentStatus = function (orderId) {
         return this.store.dispatch(dotpay_thunks_1.DotpayThunks.getDotpayStatus(orderId));
     };
+    /**
+     * Sends parsed dotpay form
+     */
+    DotpayService.prototype.sendDotpayForm = function () {
+        return this.store.dispatch(dotpay_thunks_1.DotpayThunks.sendDotpayForm());
+    };
     __decorate([
         inversify_1.inject(libstorefront_1.AbstractStore),
         __metadata("design:type", libstorefront_1.AbstractStore)
@@ -287,6 +307,11 @@ var DotpayActions;
         type: DotpayActions.SET_DOTPAY_FORM,
         payload: form
     }); };
+    DotpayActions.SET_DOTPAY_URL = DotpayActions.SN_DOTPAY + '/SET_URL';
+    DotpayActions.setDotpayUrl = function (url) { return ({
+        type: DotpayActions.SET_DOTPAY_URL,
+        payload: url
+    }); };
     DotpayActions.SET_DOTPAY_STATUS = DotpayActions.SN_DOTPAY + '/SET_STATUS';
     DotpayActions.setDotpayStatus = function (status) { return ({
         type: DotpayActions.SET_DOTPAY_STATUS,
@@ -310,6 +335,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DotpayDefaultState = void 0;
 exports.DotpayDefaultState = {
     form: null,
+    url: null,
     status: null
 };
 
@@ -348,6 +374,9 @@ var dotpayReducer = function (state, action) {
         }
         case dotpay_actions_1.DotpayActions.SET_DOTPAY_STATUS: {
             return __assign(__assign({}, state), { status: action.payload });
+        }
+        case dotpay_actions_1.DotpayActions.SET_DOTPAY_URL: {
+            return __assign(__assign({}, state), { url: action.payload });
         }
         default: return state || dotpay_default_1.DotpayDefaultState;
     }
@@ -407,12 +436,13 @@ exports.DotpayThunks = void 0;
 var dao_1 = __webpack_require__(/*! ../dao */ "./src/dao/index.ts");
 var dotpay_actions_1 = __webpack_require__(/*! ./dotpay.actions */ "./src/store/dotpay.actions.ts");
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
+var libstorefront_2 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
 var DotpayThunks;
 (function (DotpayThunks) {
     var _this = this;
     // @ts-ignore
     DotpayThunks.getDotpayForm = function (orderId) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var response, e_1;
+        var response, dotpay, data, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -420,8 +450,22 @@ var DotpayThunks;
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).getDotpayForm(orderId)];
                 case 1:
                     response = _a.sent();
-                    dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(response.result));
-                    return [2 /*return*/, response];
+                    dotpay = void 0;
+                    if (response.result instanceof Array) {
+                        data = response.result[0];
+                        if (data && data.hasOwnProperty('url')) {
+                            dotpay = data;
+                        }
+                    }
+                    else {
+                        if (response.result && response.result.hasOwnProperty('url')) {
+                            dotpay = response.result;
+                        }
+                    }
+                    libstorefront_2.StorageManager.getInstance().get(libstorefront_2.StorageCollection.ORDERS).setItem('LAST_DOTPAY_PAYMENT', dotpay);
+                    dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(dotpay.data));
+                    dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(dotpay.url));
+                    return [2 /*return*/, dotpay];
                 case 2:
                     e_1 = _a.sent();
                     return [2 /*return*/, null];
@@ -448,7 +492,65 @@ var DotpayThunks;
             }
         });
     }); }; };
+    DotpayThunks.sendDotpayForm = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+        var orderNumber_1, dotpay, form, url, response, interval_1, e_3;
+        var _this = this;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    orderNumber_1 = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().order.last_order_confirmation.confirmation.orderNumber;
+                    dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().dotpay;
+                    form = dotpay.form, url = dotpay.url;
+                    return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).sendDotpayInformationForm(url, form)];
+                case 1:
+                    response = _a.sent();
+                    interval_1 = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var status;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, dispatch(DotpayThunks.getDotpayStatus(orderNumber_1))];
+                                case 1:
+                                    status = _a.sent();
+                                    if (status) {
+                                        clearInterval(interval_1);
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 5000);
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_3 = _a.sent();
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); }; };
 })(DotpayThunks = exports.DotpayThunks || (exports.DotpayThunks = {}));
+
+
+/***/ }),
+
+/***/ "./src/utils/index.ts":
+/*!****************************!*\
+  !*** ./src/utils/index.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildDotpayPostBody = void 0;
+var qs = __webpack_require__(/*! querystring */ "querystring");
+var buildDotpayPostBody = function (formData) {
+    if (formData && Object.keys(formData).length > 0) {
+        return qs.stringify(formData);
+    }
+    return null;
+};
+exports.buildDotpayPostBody = buildDotpayPostBody;
 
 
 /***/ }),
@@ -472,6 +574,17 @@ module.exports = require("@grupakmk/libstorefront");
 /***/ (function(module, exports) {
 
 module.exports = require("inversify");
+
+/***/ }),
+
+/***/ "querystring":
+/*!******************************!*\
+  !*** external "querystring" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("querystring");
 
 /***/ })
 
