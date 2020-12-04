@@ -448,7 +448,7 @@ var MockDotpayThunks;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
-                    status_1 = failStatus || types_1.DotpayStatus.SUCCESS;
+                    status_1 = shouldFail ? (failStatus || types_1.DotpayStatus.ERROR) : types_1.DotpayStatus.SUCCESS;
                     return [4 /*yield*/, timeoutPromise()];
                 case 2:
                     _a.sent();

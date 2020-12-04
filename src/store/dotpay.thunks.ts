@@ -1,12 +1,7 @@
-import { DotpayActions } from './dotpay.actions';
-import {
-    AbstractStore,
-    IOCContainer,
-    StorageCollection,
-    StorageManager
-} from '@grupakmk/libstorefront';
-import { DotpayResponse, DotpayStatus } from '../types';
-import { DotpayModuleState } from './dotpay.default';
+import {DotpayActions} from './dotpay.actions';
+import {AbstractStore, IOCContainer, StorageCollection, StorageManager} from '@grupakmk/libstorefront';
+import {DotpayResponse, DotpayStatus} from '../types';
+import {DotpayModuleState} from './dotpay.default';
 
 const timeoutPromise = (time = 2000) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
 export namespace MockDotpayThunks {
@@ -60,7 +55,7 @@ export namespace MockDotpayThunks {
     export const getDotpayStatus = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
         const timeoutPromise = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
         try {
-            const status = failStatus || DotpayStatus.SUCCESS;
+            const status = shouldFail ? (failStatus || DotpayStatus.ERROR) : DotpayStatus.SUCCESS;
             await timeoutPromise();
             await dispatch(DotpayActions.setDotpayStatus(status));
             return status;
