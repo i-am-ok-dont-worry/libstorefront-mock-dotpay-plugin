@@ -42,17 +42,21 @@ export namespace DotpayThunks {
     }
 
     export const sendDotpayForm = () => async (dispatch, getState) => {
-        try {
-            const orderNumber = (IOCContainer.get(AbstractStore).getState() as LibstorefrontInnerState).order.last_order_confirmation.confirmation.orderNumber;
-            const dotpay = IOCContainer.get(AbstractStore).getState().dotpay as DotpayModuleState;
-            const { form, url } = dotpay;
-            const response = await IOCContainer.get(DotpayDao).sendDotpayInformationForm(url, form);
+        const orderNumber = (IOCContainer.get(AbstractStore).getState() as LibstorefrontInnerState).order.last_order_confirmation.confirmation.orderNumber;
+        const trackStatus = (orderNumber) => {
             const interval = setInterval(async () => {
                 const status = await dispatch(getDotpayStatus(orderNumber));
                 if (status) { clearInterval(interval); }
             }, 5000);
+        };
+
+        try {
+            const dotpay = IOCContainer.get(AbstractStore).getState().dotpay as DotpayModuleState;
+            const { form, url } = dotpay;
+            await IOCContainer.get(DotpayDao).sendDotpayInformationForm(url, form);
+            trackStatus(orderNumber);
         } catch (e) {
-            console.warn('Sending dotpay error: ', e);
+            trackStatus(orderNumber);
         }
     }
 }

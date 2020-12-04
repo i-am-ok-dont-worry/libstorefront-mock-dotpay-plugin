@@ -498,38 +498,43 @@ var DotpayThunks;
         });
     }); }; };
     DotpayThunks.sendDotpayForm = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var orderNumber_1, dotpay, form, url, response, interval_1, e_3;
+        var orderNumber, trackStatus, dotpay, form, url, e_3;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    orderNumber_1 = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().order.last_order_confirmation.confirmation.orderNumber;
+                    orderNumber = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().order.last_order_confirmation.confirmation.orderNumber;
+                    trackStatus = function (orderNumber) {
+                        var interval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var status;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, dispatch(DotpayThunks.getDotpayStatus(orderNumber))];
+                                    case 1:
+                                        status = _a.sent();
+                                        if (status) {
+                                            clearInterval(interval);
+                                        }
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, 5000);
+                    };
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
                     dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().dotpay;
                     form = dotpay.form, url = dotpay.url;
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.DotpayDao).sendDotpayInformationForm(url, form)];
-                case 1:
-                    response = _a.sent();
-                    interval_1 = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                        var status;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, dispatch(DotpayThunks.getDotpayStatus(orderNumber_1))];
-                                case 1:
-                                    status = _a.sent();
-                                    if (status) {
-                                        clearInterval(interval_1);
-                                    }
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }, 5000);
-                    return [3 /*break*/, 3];
                 case 2:
+                    _a.sent();
+                    trackStatus(orderNumber);
+                    return [3 /*break*/, 4];
+                case 3:
                     e_3 = _a.sent();
-                    console.warn('Sending dotpay error: ', e_3);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    trackStatus(orderNumber);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); }; };
