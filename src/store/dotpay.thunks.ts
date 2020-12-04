@@ -62,10 +62,10 @@ export namespace DotpayThunks {
     export const loadLastDotpayTransaction = () => async (dispatch, getState) => {
         try {
             const lastDotpayPayment: DotpayModuleState = await StorageManager.getInstance().get(StorageCollection.ORDERS).getItem('last_dotpay_payment');
-            console.warn('Loading dotpay from cache: ', lastDotpayPayment);
+            if (!lastDotpayPayment) { return; }
             dispatch(DotpayActions.setDotpayUrl(lastDotpayPayment.url));
             dispatch(DotpayActions.setDotpayForm(lastDotpayPayment.form));
             dispatch(DotpayActions.setDotpayStatus(lastDotpayPayment.status));
-        } catch (e) { console.error('Failed loading from cache: ', e); }
+        } catch (e) {}
     }
 }
