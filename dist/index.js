@@ -219,6 +219,7 @@ var DotpayPaymentPlugin = function (libstorefront) {
     libstorefront.getIOCContainer().bind(dao_1.DotpayDao).to(dao_1.DotpayDao);
     libstorefront.listenTo(libstorefront_1.HookType.AfterCoreModulesRegistered, function (lsf) {
         lsf.registerModule(libstorefront_1.createLibstorefrontModule('dotpay', dotpay_reducer_1.dotpayReducer, dotpay_default_1.DotpayDefaultState));
+        lsf.getIOCContainer().get(service_1.DotpayService).loadLastTransactionFromCache();
     });
 };
 exports.DotpayPaymentPlugin = DotpayPaymentPlugin;
@@ -255,8 +256,6 @@ var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupa
 var DotpayService = /** @class */ (function () {
     function DotpayService(store) {
         this.store = store;
-        console.warn('Constructor!');
-        store.dispatch(dotpay_thunks_1.DotpayThunks.loadLastDotpayTransaction());
     }
     /**
      * Returns dotpay form that should be POST send
@@ -281,6 +280,9 @@ var DotpayService = /** @class */ (function () {
      */
     DotpayService.prototype.sendDotpayForm = function () {
         return this.store.dispatch(dotpay_thunks_1.DotpayThunks.sendDotpayForm());
+    };
+    DotpayService.prototype.loadLastTransactionFromCache = function () {
+        this.store.dispatch(dotpay_thunks_1.DotpayThunks.loadLastDotpayTransaction());
     };
     DotpayService = __decorate([
         inversify_1.injectable(),

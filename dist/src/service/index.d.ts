@@ -20,5 +20,6 @@ export declare class DotpayService {
      * Sends parsed dotpay form
      */
     sendDotpayForm(): Promise<Task>;
+    loadLastTransactionFromCache(): void;
     constructor(store: AbstractStore<LibstorefrontInnerState>);
 }

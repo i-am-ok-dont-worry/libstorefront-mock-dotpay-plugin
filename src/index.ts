@@ -12,5 +12,6 @@ export const DotpayPaymentPlugin = (libstorefront: LibStorefront) => {
     libstorefront.getIOCContainer().bind<DotpayDao>(DotpayDao).to(DotpayDao);
     libstorefront.listenTo(HookType.AfterCoreModulesRegistered, (lsf: LibStorefront) => {
         lsf.registerModule(createLibstorefrontModule('dotpay', dotpayReducer, DotpayDefaultState));
+        lsf.getIOCContainer().get(DotpayService).loadLastTransactionFromCache();
     });
 };

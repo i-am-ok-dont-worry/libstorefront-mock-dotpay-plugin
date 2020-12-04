@@ -33,8 +33,9 @@ export class DotpayService {
         return this.store.dispatch(DotpayThunks.sendDotpayForm());
     }
 
-    public constructor(@inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>) {
-        console.warn('Constructor!');
-        store.dispatch(DotpayThunks.loadLastDotpayTransaction());
+    public loadLastTransactionFromCache (): void {
+        this.store.dispatch(DotpayThunks.loadLastDotpayTransaction());
     }
+
+    public constructor(@inject(AbstractStore) private store: AbstractStore<LibstorefrontInnerState>) {}
 }
