@@ -30,7 +30,6 @@ export class DotpayDao {
     }
 
     public sendDotpayInformationForm (sslUrl: string, form: DotpayForm): Promise<Task> {
-        console.warn('Sending dotpay form at: ', sslUrl, buildDotpayPostBody(form));
         return this.taskQueue.execute({
             url: sslUrl,
             payload: {

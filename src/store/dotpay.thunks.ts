@@ -18,7 +18,7 @@ export namespace DotpayThunks {
                 if (response.result && response.result.hasOwnProperty('url')) { dotpay = response.result; }
             }
 
-            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('LAST_DOTPAY_PAYMENT', dotpay);
+            StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', dotpay);
             dispatch(DotpayActions.setDotpayForm(dotpay.data));
             dispatch(DotpayActions.setDotpayUrl(dotpay.url));
             return dotpay;
