@@ -438,27 +438,24 @@ var MockDotpayThunks;
     }); }; };
     // @ts-ignore
     MockDotpayThunks.getDotpayStatus = function (shouldFail, failStatus) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var timeoutPromise, status_1, e_2;
+        var status_1, e_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    timeoutPromise = function () { return new Promise(function (resolve) { return setTimeout(function () { return resolve(); }, 1000); }); };
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 4, , 5]);
+                    _a.trys.push([0, 3, , 4]);
                     status_1 = shouldFail ? (failStatus || types_1.DotpayStatus.ERROR) : types_1.DotpayStatus.SUCCESS;
-                    return [4 /*yield*/, timeoutPromise()];
-                case 2:
+                    return [4 /*yield*/, timeoutPromise(15000)];
+                case 1:
                     _a.sent();
                     return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(status_1))];
-                case 3:
+                case 2:
                     _a.sent();
                     return [2 /*return*/, status_1];
-                case 4:
+                case 3:
                     e_2 = _a.sent();
                     console.warn('Error while fetching status: ', e_2);
                     return [2 /*return*/, null];
-                case 5: return [2 /*return*/];
+                case 4: return [2 /*return*/];
             }
         });
     }); }; };

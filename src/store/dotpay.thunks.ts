@@ -53,10 +53,9 @@ export namespace MockDotpayThunks {
 
     // @ts-ignore
     export const getDotpayStatus = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
-        const timeoutPromise = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
         try {
             const status = shouldFail ? (failStatus || DotpayStatus.ERROR) : DotpayStatus.SUCCESS;
-            await timeoutPromise();
+            await timeoutPromise(15000);
             await dispatch(DotpayActions.setDotpayStatus(status));
             return status;
         } catch (e) {
