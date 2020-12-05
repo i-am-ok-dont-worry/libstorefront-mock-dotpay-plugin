@@ -1,11 +1,12 @@
 import {DotpayActions} from './dotpay.actions';
-import {AbstractStore, IOCContainer, StorageCollection, StorageManager} from '@grupakmk/libstorefront';
+import {StorageCollection, StorageManager} from '@grupakmk/libstorefront';
 import {DotpayResponse, DotpayStatus} from '../types';
 import {DotpayModuleState} from './dotpay.default';
 
 const timeoutPromise = (time = 2000) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
 export namespace MockDotpayThunks {
     // @ts-ignore
+    import setDotpayStatus = DotpayActions.setDotpayStatus;
     export const getDotpayForm = () => async (dispatch, getState) => {
         try {
             const mockData = {
@@ -65,21 +66,10 @@ export namespace MockDotpayThunks {
     };
 
     export const sendDotpayForm = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
-        const trackStatus = () => {
-            const interval = setInterval(async () => {
-                const status = await dispatch(getDotpayStatus(shouldFail, failStatus));
-                if (status === DotpayStatus.SUCCESS) { clearInterval(interval); }
-                StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
-            }, 5000);
-        };
-
-        try {
-            await timeoutPromise(4000);
-            trackStatus();
-        } catch (e) {
-            await timeoutPromise(4000);
-            trackStatus();
-        }
+        await dispatch(setDotpayStatus(DotpayStatus.PENDING));
+        await timeoutPromise(4000);
+        dispatch(getDotpayStatus(shouldFail, failStatus));
+        StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
     };
 
     export const loadLastDotpayTransaction = () => async (dispatch, getState) => {

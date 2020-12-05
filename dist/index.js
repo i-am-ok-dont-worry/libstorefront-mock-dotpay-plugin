@@ -383,6 +383,7 @@ var MockDotpayThunks;
 (function (MockDotpayThunks) {
     var _this = this;
     // @ts-ignore
+    var setDotpayStatus = dotpay_actions_1.DotpayActions.setDotpayStatus;
     MockDotpayThunks.getDotpayForm = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
         var mockData, mockDotpayResponse, e_1;
         return __generator(this, function (_a) {
@@ -460,49 +461,22 @@ var MockDotpayThunks;
         });
     }); }; };
     MockDotpayThunks.sendDotpayForm = function (shouldFail, failStatus) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var trackStatus, e_3;
-        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    trackStatus = function () {
-                        var interval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                            var status;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, dispatch(MockDotpayThunks.getDotpayStatus(shouldFail, failStatus))];
-                                    case 1:
-                                        status = _a.sent();
-                                        if (status === types_1.DotpayStatus.SUCCESS) {
-                                            clearInterval(interval);
-                                        }
-                                        libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); }, 5000);
-                    };
-                    _a.label = 1;
+                case 0: return [4 /*yield*/, dispatch(setDotpayStatus(types_1.DotpayStatus.PENDING))];
                 case 1:
-                    _a.trys.push([1, 3, , 5]);
+                    _a.sent();
                     return [4 /*yield*/, timeoutPromise(4000)];
                 case 2:
                     _a.sent();
-                    trackStatus();
-                    return [3 /*break*/, 5];
-                case 3:
-                    e_3 = _a.sent();
-                    return [4 /*yield*/, timeoutPromise(4000)];
-                case 4:
-                    _a.sent();
-                    trackStatus();
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    dispatch(MockDotpayThunks.getDotpayStatus(shouldFail, failStatus));
+                    libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
+                    return [2 /*return*/];
             }
         });
     }); }; };
     MockDotpayThunks.loadLastDotpayTransaction = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var lastDotpayPayment, e_4;
+        var lastDotpayPayment, e_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -518,7 +492,7 @@ var MockDotpayThunks;
                     dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(lastDotpayPayment.status));
                     return [3 /*break*/, 3];
                 case 2:
-                    e_4 = _a.sent();
+                    e_3 = _a.sent();
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
