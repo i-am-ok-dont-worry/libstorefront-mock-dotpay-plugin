@@ -1,12 +1,11 @@
-import {DotpayActions} from './dotpay.actions';
-import {StorageCollection, StorageManager} from '@grupakmk/libstorefront';
-import {DotpayResponse, DotpayStatus} from '../types';
-import {DotpayModuleState} from './dotpay.default';
+import { DotpayActions } from './dotpay.actions';
+import { StorageCollection, StorageManager } from '@grupakmk/libstorefront';
+import { DotpayResponse, DotpayStatus } from '../types';
+import { DotpayModuleState } from './dotpay.default';
 
 const timeoutPromise = (time = 2000) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
 export namespace MockDotpayThunks {
     // @ts-ignore
-    import setDotpayStatus = DotpayActions.setDotpayStatus;
     export const getDotpayForm = () => async (dispatch, getState) => {
         try {
             const mockData = {
@@ -43,6 +42,7 @@ export namespace MockDotpayThunks {
                 url: 'https://ssl.dotpay.pl/test_payment/'
             };
 
+            await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.PENDING));
             await dispatch(DotpayActions.setDotpayForm(mockDotpayResponse.data));
             await dispatch(DotpayActions.setDotpayUrl(mockDotpayResponse.url));
             StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
@@ -66,7 +66,7 @@ export namespace MockDotpayThunks {
     };
 
     export const sendDotpayForm = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
-        await dispatch(setDotpayStatus(DotpayStatus.PENDING));
+        await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.PENDING));
         await timeoutPromise(4000);
         dispatch(getDotpayStatus(shouldFail, failStatus));
         StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);

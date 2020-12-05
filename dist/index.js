@@ -383,13 +383,12 @@ var MockDotpayThunks;
 (function (MockDotpayThunks) {
     var _this = this;
     // @ts-ignore
-    var setDotpayStatus = dotpay_actions_1.DotpayActions.setDotpayStatus;
     MockDotpayThunks.getDotpayForm = function () { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
         var mockData, mockDotpayResponse, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    _a.trys.push([0, 4, , 5]);
                     mockData = {
                         amount: 424.25,
                         api_version: "dev",
@@ -422,18 +421,21 @@ var MockDotpayThunks;
                         data: mockData,
                         url: 'https://ssl.dotpay.pl/test_payment/'
                     };
-                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(mockDotpayResponse.data))];
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(types_1.DotpayStatus.PENDING))];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(mockDotpayResponse.url))];
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayForm(mockDotpayResponse.data))];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayUrl(mockDotpayResponse.url))];
+                case 3:
                     _a.sent();
                     libstorefront_1.StorageManager.getInstance().get(libstorefront_1.StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
                     return [2 /*return*/, mockDotpayResponse];
-                case 3:
+                case 4:
                     e_1 = _a.sent();
                     return [2 /*return*/, null];
-                case 4: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     }); }; };
@@ -463,7 +465,7 @@ var MockDotpayThunks;
     MockDotpayThunks.sendDotpayForm = function (shouldFail, failStatus) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dispatch(setDotpayStatus(types_1.DotpayStatus.PENDING))];
+                case 0: return [4 /*yield*/, dispatch(dotpay_actions_1.DotpayActions.setDotpayStatus(types_1.DotpayStatus.PENDING))];
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, timeoutPromise(4000)];
