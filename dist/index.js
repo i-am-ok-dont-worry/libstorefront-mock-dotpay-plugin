@@ -460,7 +460,7 @@ var MockDotpayThunks;
         });
     }); }; };
     MockDotpayThunks.sendDotpayForm = function (shouldFail, failStatus) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var trackStatus, dotpay, e_3;
+        var trackStatus, e_3;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -484,18 +484,20 @@ var MockDotpayThunks;
                     };
                     _a.label = 1;
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    dotpay = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().dotpay;
+                    _a.trys.push([1, 3, , 5]);
                     return [4 /*yield*/, timeoutPromise(4000)];
                 case 2:
                     _a.sent();
                     trackStatus();
-                    return [3 /*break*/, 4];
+                    return [3 /*break*/, 5];
                 case 3:
                     e_3 = _a.sent();
+                    return [4 /*yield*/, timeoutPromise(4000)];
+                case 4:
+                    _a.sent();
                     trackStatus();
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); }; };
@@ -540,7 +542,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DotpayStatus = void 0;
 var DotpayStatus;
 (function (DotpayStatus) {
-    DotpayStatus[DotpayStatus["NOT_EXISTS"] = 1] = "NOT_EXISTS";
+    DotpayStatus[DotpayStatus["NOT_EXISTS"] = -1] = "NOT_EXISTS";
     DotpayStatus[DotpayStatus["ERROR"] = 0] = "ERROR";
     DotpayStatus[DotpayStatus["PENDING"] = 1] = "PENDING";
     DotpayStatus[DotpayStatus["SUCCESS"] = 2] = "SUCCESS";

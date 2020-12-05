@@ -74,10 +74,10 @@ export namespace MockDotpayThunks {
         };
 
         try {
-            const dotpay = IOCContainer.get(AbstractStore).getState().dotpay as DotpayModuleState;
             await timeoutPromise(4000);
             trackStatus();
         } catch (e) {
+            await timeoutPromise(4000);
             trackStatus();
         }
     };
