@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { MockDotpayThunks } from '../store/dotpay.thunks';
-import { AbstractStore, LibstorefrontInnerState, Task } from '@grupakmk/libstorefront';
+import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront';
 import { DotpayResponse, DotpayStatus } from '../types';
 
 @injectable()
@@ -29,18 +29,25 @@ export class MockDotpayService {
         return this.store.dispatch(MockDotpayThunks.getDotpayStatus(this.shouldFail, this.failStatus));
     }
 
-    /**
-     * Sends parsed dotpay form
-     */
-    public sendDotpayForm (): Promise<Task> {
-        return this.store.dispatch(MockDotpayThunks.sendDotpayForm(this.shouldFail, this.failStatus));
-    }
-
     public loadLastTransactionFromCache (): void {
         this.store.dispatch(MockDotpayThunks.loadLastDotpayTransaction());
     }
 
-    public setConfig({ shouldFail, failStatus }) {
+    /**
+     * Redirects to dotpay secure payment site via GET redirect
+     */
+    public redirectToDotpayViaUrl (): Promise<void> {
+        return this.store.dispatch(MockDotpayThunks.redirectToDotpayViaUrl(this.shouldFail, this.failStatus));
+    }
+
+    /**
+     * Redirects to dotpay secure payment site via injected html POST form
+     */
+    public redirectToDotpayViaPostForm (): Promise<void> {
+        return this.store.dispatch(MockDotpayThunks.redirectToDotPayViaPostForm(this.shouldFail, this.failStatus));
+    }
+
+    public setConfig({ shouldFail, failStatus }): void {
         this.shouldFail = shouldFail;
         this.failStatus = failStatus;
     }

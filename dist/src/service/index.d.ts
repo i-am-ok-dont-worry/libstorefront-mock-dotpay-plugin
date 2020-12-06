@@ -1,4 +1,4 @@
-import { AbstractStore, LibstorefrontInnerState, Task } from '@grupakmk/libstorefront';
+import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront';
 import { DotpayResponse, DotpayStatus } from '../types';
 export declare class MockDotpayService {
     private store;
@@ -18,11 +18,15 @@ export declare class MockDotpayService {
      * @returns {Promise<DotpayStatus>} Payment status
      */
     getDotpayPaymentStatus(): Promise<DotpayStatus>;
-    /**
-     * Sends parsed dotpay form
-     */
-    sendDotpayForm(): Promise<Task>;
     loadLastTransactionFromCache(): void;
+    /**
+     * Redirects to dotpay secure payment site via GET redirect
+     */
+    redirectToDotpayViaUrl(): Promise<void>;
+    /**
+     * Redirects to dotpay secure payment site via injected html POST form
+     */
+    redirectToDotpayViaPostForm(): Promise<void>;
     setConfig({ shouldFail, failStatus }: {
         shouldFail: any;
         failStatus: any;

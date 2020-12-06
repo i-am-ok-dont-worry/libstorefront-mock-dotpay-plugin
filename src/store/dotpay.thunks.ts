@@ -1,7 +1,7 @@
-import { DotpayActions } from './dotpay.actions';
-import { StorageCollection, StorageManager } from '@grupakmk/libstorefront';
-import { DotpayResponse, DotpayStatus } from '../types';
-import { DotpayModuleState } from './dotpay.default';
+import {DotpayActions} from './dotpay.actions';
+import {StorageCollection, StorageManager} from '@grupakmk/libstorefront';
+import {DotpayResponse, DotpayStatus} from '../types';
+import {DotpayModuleState} from './dotpay.default';
 
 const timeoutPromise = (time = 2000) => new Promise<void>((resolve) => setTimeout(() => resolve(), time));
 export namespace MockDotpayThunks {
@@ -65,13 +65,6 @@ export namespace MockDotpayThunks {
         }
     };
 
-    export const sendDotpayForm = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
-        await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.PENDING));
-        await timeoutPromise(4000);
-        dispatch(getDotpayStatus(shouldFail, failStatus));
-        StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
-    };
-
     export const loadLastDotpayTransaction = () => async (dispatch, getState) => {
         try {
             const lastDotpayPayment: DotpayModuleState = await StorageManager.getInstance().get(StorageCollection.ORDERS).getItem('last_dotpay_payment');
@@ -80,5 +73,37 @@ export namespace MockDotpayThunks {
             dispatch(DotpayActions.setDotpayForm(lastDotpayPayment.form));
             dispatch(DotpayActions.setDotpayStatus(lastDotpayPayment.status));
         } catch (e) {}
-    }
+    };
+
+    export const getRedirectUrl = () => async (dispatch, getState) => {
+        try {
+            await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.PENDING));
+        } catch (e) {
+
+        }
+    };
+
+    export const redirectToDotPayViaPostForm = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
+        await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.PENDING));
+        await timeoutPromise(4000);
+        if (shouldFail) {
+            await dispatch(DotpayActions.setDotpayStatus(failStatus || DotpayStatus.ERROR));
+        } else {
+            await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.SUCCESS));
+        }
+
+        StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
+    };
+
+    export const redirectToDotpayViaUrl = (shouldFail?: boolean, failStatus?: DotpayStatus) => async (dispatch, getState) => {
+        await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.PENDING));
+        await timeoutPromise(4000);
+        if (shouldFail) {
+            await dispatch(DotpayActions.setDotpayStatus(failStatus || DotpayStatus.ERROR));
+        } else {
+            await dispatch(DotpayActions.setDotpayStatus(DotpayStatus.SUCCESS));
+        }
+
+        StorageManager.getInstance().get(StorageCollection.ORDERS).setItem('last_dotpay_payment', getState().dotpay);
+    };
 }
