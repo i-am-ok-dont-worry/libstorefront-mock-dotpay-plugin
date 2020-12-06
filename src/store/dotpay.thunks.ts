@@ -34,7 +34,8 @@ export namespace MockDotpayThunks {
                 street_n1: "Kaczyńskiego 3",
                 type: 0,
                 url: "https://ktm.staging.grupakmk.pl/checkout/dotpay/status",
-                urlc: "https://mage.ktm.staging.grupakmk.pl/dotpay/payment/confirm"
+                urlc: "https://mage.ktm.staging.grupakmk.pl/dotpay/payment/confirm",
+                magentoOrder: "6000000073"
             };
 
             let mockDotpayResponse: DotpayResponse = {
