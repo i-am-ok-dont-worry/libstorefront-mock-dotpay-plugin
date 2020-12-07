@@ -1,4 +1,4 @@
-import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront';
+import { AbstractStore, LibstorefrontInnerState, PaymentMethod } from '@grupakmk/libstorefront';
 import { DotpayResponse, DotpayStatus } from '../types';
 export declare class MockDotpayService {
     private store;
@@ -11,22 +11,28 @@ export declare class MockDotpayService {
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
      */
-    getDotpayPaymentForm(): Promise<DotpayResponse>;
+    preparePayment(): Promise<DotpayResponse>;
     /**
      * Returns dotpay payment status for selected order
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    getDotpayPaymentStatus(): Promise<DotpayStatus>;
+    getPaymentStatus(): Promise<DotpayStatus>;
     loadLastTransactionFromCache(): void;
     /**
      * Redirects to dotpay secure payment site via GET redirect
      */
-    redirectToDotpayViaUrl(): Promise<void>;
+    redirectToPaymentViaUrl(): Promise<void>;
     /**
      * Redirects to dotpay secure payment site via injected html POST form
      */
-    redirectToDotpayViaPostForm(): Promise<void>;
+    redirectToPaymentViaPostForm(): Promise<void>;
+    /**
+     * Returns true if payment method can be handled by this plugin
+     * @param {PaymentMethod} paymentMethod
+     * @returns {boolean}
+     */
+    canHandleMethod(paymentMethod: PaymentMethod): boolean;
     setConfig({ shouldFail, failStatus }: {
         shouldFail: any;
         failStatus: any;

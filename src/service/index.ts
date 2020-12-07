@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { MockDotpayThunks } from '../store/dotpay.thunks';
-import { AbstractStore, LibstorefrontInnerState } from '@grupakmk/libstorefront';
+import { AbstractStore, LibstorefrontInnerState, PaymentMethod } from '@grupakmk/libstorefront';
 import { DotpayResponse, DotpayStatus } from '../types';
 
 @injectable()
@@ -16,7 +16,7 @@ export class MockDotpayService {
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
      */
-    public getDotpayPaymentForm (): Promise<DotpayResponse> {
+    public preparePayment (): Promise<DotpayResponse> {
         return this.store.dispatch(MockDotpayThunks.getDotpayForm());
     }
 
@@ -25,7 +25,7 @@ export class MockDotpayService {
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    public getDotpayPaymentStatus (): Promise<DotpayStatus> {
+    public getPaymentStatus (): Promise<DotpayStatus> {
         return this.store.dispatch(MockDotpayThunks.getDotpayStatus(this.shouldFail, this.failStatus));
     }
 
@@ -36,15 +36,24 @@ export class MockDotpayService {
     /**
      * Redirects to dotpay secure payment site via GET redirect
      */
-    public redirectToDotpayViaUrl (): Promise<void> {
+    public redirectToPaymentViaUrl (): Promise<void> {
         return this.store.dispatch(MockDotpayThunks.redirectToDotpayViaUrl(this.shouldFail, this.failStatus));
     }
 
     /**
      * Redirects to dotpay secure payment site via injected html POST form
      */
-    public redirectToDotpayViaPostForm (): Promise<void> {
+    public redirectToPaymentViaPostForm (): Promise<void> {
         return this.store.dispatch(MockDotpayThunks.redirectToDotPayViaPostForm(this.shouldFail, this.failStatus));
+    }
+
+    /**
+     * Returns true if payment method can be handled by this plugin
+     * @param {PaymentMethod} paymentMethod
+     * @returns {boolean}
+     */
+    public canHandleMethod (paymentMethod: PaymentMethod): boolean {
+        return ['dotpay_other', 'dotpay_widget'].includes(paymentMethod.code);
     }
 
     public setConfig({ shouldFail, failStatus }): void {

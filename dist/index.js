@@ -189,7 +189,7 @@ var MockDotpayService = /** @class */ (function () {
      * @param {number} orderId
      * @returns {Promise<any>} Dotpay embeddable form
      */
-    MockDotpayService.prototype.getDotpayPaymentForm = function () {
+    MockDotpayService.prototype.preparePayment = function () {
         return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.getDotpayForm());
     };
     /**
@@ -197,7 +197,7 @@ var MockDotpayService = /** @class */ (function () {
      * @param {string} orderId
      * @returns {Promise<DotpayStatus>} Payment status
      */
-    MockDotpayService.prototype.getDotpayPaymentStatus = function () {
+    MockDotpayService.prototype.getPaymentStatus = function () {
         return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.getDotpayStatus(this.shouldFail, this.failStatus));
     };
     MockDotpayService.prototype.loadLastTransactionFromCache = function () {
@@ -206,14 +206,22 @@ var MockDotpayService = /** @class */ (function () {
     /**
      * Redirects to dotpay secure payment site via GET redirect
      */
-    MockDotpayService.prototype.redirectToDotpayViaUrl = function () {
+    MockDotpayService.prototype.redirectToPaymentViaUrl = function () {
         return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.redirectToDotpayViaUrl(this.shouldFail, this.failStatus));
     };
     /**
      * Redirects to dotpay secure payment site via injected html POST form
      */
-    MockDotpayService.prototype.redirectToDotpayViaPostForm = function () {
+    MockDotpayService.prototype.redirectToPaymentViaPostForm = function () {
         return this.store.dispatch(dotpay_thunks_1.MockDotpayThunks.redirectToDotPayViaPostForm(this.shouldFail, this.failStatus));
+    };
+    /**
+     * Returns true if payment method can be handled by this plugin
+     * @param {PaymentMethod} paymentMethod
+     * @returns {boolean}
+     */
+    MockDotpayService.prototype.canHandleMethod = function (paymentMethod) {
+        return ['dotpay_other', 'dotpay_widget'].includes(paymentMethod.code);
     };
     MockDotpayService.prototype.setConfig = function (_a) {
         var shouldFail = _a.shouldFail, failStatus = _a.failStatus;
