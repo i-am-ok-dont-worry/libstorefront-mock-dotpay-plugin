@@ -1,5 +1,5 @@
 {
-  "name": "libstorefront-mock-dotpay-plugin",
+  "name": "@grupakmk/libstorefront-mock-dotpay-plugin",
   "version": "1.0.0",
   "description": "Mocked plugin for dotpay payment",
   "main": "dist/index.js",
@@ -39,6 +39,6 @@
     "webpack-node-externals": "^2.5.2"
   },
   "publishConfig": {
-    "@grupakmk:registry": "https://gitlab.com/api/v4/projects/22810671/packages/npm/"
+    "@grupakmk:registry": "https://npm.grupakmk.pl/"
   }
 }
